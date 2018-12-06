@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    <title> ALANCMDB-业务线管理 </title>
+{% endblock %}
+
+
+{% block css-js %}
+
+
+
+
+{% endblock %}
+
+
+{% block page-title %}
+    <h1 class="page-header text-overflow">Business Manger</h1>
+{% endblock %}
+
+{% block content %}
+
+    <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">业务线管理</h3>
+
+
+            <li class="pull-left btn">
+                <a href="{% url 'cmdb:business_add' %}" class="btn btn-success btn-bock">
+                    <b>新增业务线</b>
+                </a>
+            </li>
+        </div>
+        <div class="panel-body">
+
+            <table id="assets_table" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>业务线名称</th>
+                    <th>上级业务线</th>
+                    <th>业务线说明</th>
+                    <th>负责人</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for d in bus_data %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ d.name }}</td>
+                        <td>{{ d.parent_unit|default_if_none:"-" }}</td>
+                        <td>{{ d.memo }}</td>
+                        <td>{{ d.manager }}</td>
+                        <td class="text-center" data-editable='false'>
+                            {% if d.id %}
+                            <a href="{% url "cmdb:business_edit" d.id %}" class="btn btn-sm btn-info">编辑</a>
+                            <a href="{% url "cmdb:business_del" d.id %}" class="btn btn-sm btn-danger user_del"
+                               onclick="return confirm('确认删除？')">删除</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>没有数据！</tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+
+
+
+
+{% endblock %}

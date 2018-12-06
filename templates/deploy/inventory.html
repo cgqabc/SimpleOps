@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+<title> 动态资产管理 </title>
+{% endblock %}
+
+
+{% block css-js %}
+
+  <!--DataTables [ OPTIONAL ]-->
+    <link href="/static/css/datatables.bootstrap.css" rel="stylesheet">
+	<link href="/static/css/datatables.responsive.css" rel="stylesheet">
+        <!--FooTable [ OPTIONAL ]-->
+    <link href="/static/css/footable.core.css" rel="stylesheet">
+
+   <script src="/static/js/jquery.datatables.js"></script>
+    <script src="/static/js/datatables.bootstrap.js"></script>
+	<script src="/static/js/datatables.responsive.min.js"></script>
+    <!--DataTables Sample [ SAMPLE ]-->
+    <script src="/static/js/tables-datatables.js"></script>
+    <!--FooTable [ OPTIONAL ]-->
+    <script src="/static/js/footable.all.min.js"></script>
+
+
+    <!--FooTable Example [ SAMPLE ]-->
+    <script src="/static/js/tables-footable.js"></script>
+
+
+{% endblock %}
+
+
+{% block page-title %}
+<h1 class="page-header text-overflow">Inventory Manger</h1>
+{% endblock %}
+
+{% block content %}
+
+<div class="panel">
+					    <div class="panel-heading">
+					        <h3 class="panel-title">动态资产管理</h3>
+                        </div>
+
+                            <li class="pull-left btn">
+                            <a href="{% url 'inventory_add' %}" class="btn btn-success btn-bock" >
+                                <b>新增动态资产</b>
+                            </a>
+                            </li>
+
+<br>
+<br>
+                            <!-- Foo Table - Pagination -->
+                    <!--===================================================-->
+                    <div class="panel-body">
+					                <label class="form-inline">Show
+					                    <select id="demo-show-entries" class="form-control input-sm">
+					                        <option value="5">5</option>
+					                        <option value="10">10</option>
+					                        <option value="15">15</option>
+					                        <option value="20">20</option>
+					                    </select>
+					                    entries
+					                </label>
+					                <table id="demo-foo-pagination" class="table toggle-arrow-tiny" data-page-size="5">
+					                    <thead>
+					                        <tr>
+					                            <th data-toggle="true">序号</th>
+					                            <th>名称</th>
+					                            <th>功能描述</th>
+					                            <th>创建人</th>
+					                            <th>创建时间</th>
+                                                <th>操作</th>
+                                                <th data-hide="all">inventory</th>
+					                        </tr>
+					                    </thead>
+					                    <tbody>
+                                        {% for data in data_list %}
+                                        <tr>
+                                          <td>{{ forloop.counter }}</td>
+
+					                            <td>{{ data.name }}</td>
+					                            <td>{{ data.desc }}</td>
+					                            <td>{{ data.create_user }}</td>
+					                            <td>{{ data.create_time }}</td>
+					                             <td class="text-center" data-editable='false'>
+                                        <a href="{% url 'inventory_edit' data.id %}" class="btn btn-sm btn-info">编辑</a>
+                                        <a href="{% url 'inventory_del' data.id %}" class="btn btn-sm btn-danger user_del"  onclick="return confirm('确认删除？')">删除</a>
+                                    </td>
+                                            <td>
+
+                                                <pre>{{ data.detail }}</pre>
+
+                                            </td>
+					                        </tr>
+                                        {% empty %}
+                                         <tr>没有数据！</tr>
+                                        {% endfor %}
+
+					                    </tbody>
+					                    <tfoot>
+					                        <tr>
+					                            <td colspan="5">
+					                                <div class="text-right">
+					                                    <ul class="pagination"></ul>
+					                                </div>
+					                            </td>
+					                        </tr>
+					                    </tfoot>
+					                </table>
+					            </div>
+                    <!--===================================================-->
+                    <!-- End Foo Table - Pagination -->
+					</div>
+
+
+{% endblock %}

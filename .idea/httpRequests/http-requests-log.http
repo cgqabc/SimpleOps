@@ -1,0 +1,38 @@
+GET http://192.168.0.110:8000/api/assets/9
+Accept: */*
+Cache-Control: no-cache
+Authorization: Basic YWRtaW46YWxhbjEyMzQ=
+
+<> 2018-11-27T093524.200.json
+
+###
+
+GET http://192.168.0.110:8000/api/assets
+Accept: */*
+Cache-Control: no-cache
+Authorization: Basic YWRtaW46YWxhbjEyMzQ=
+
+<> 2018-11-27T093353.200.json
+
+###
+
+GET http://192.168.0.110:8080/api/assets
+Accept: */*
+Cache-Control: no-cache
+Authorization: Basic YWRtaW46YWxhbjEyMzQ=
+
+###
+
+GET http://localhost:8080/api/
+Accept: */*
+Cache-Control: no-cache
+Authorization: Basic YWRtaW46YWxhbjEyMzQ=
+
+###
+
+GET http://localhost:8080/api/
+Accept: */*
+Cache-Control: no-cache
+
+###
+

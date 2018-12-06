@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+<title> 项目交付执行日志 </title>
+{% endblock %}
+
+
+{% block css-js %}
+
+  <!--DataTables [ OPTIONAL ]-->
+    <link href="/static/css/datatables.bootstrap.css" rel="stylesheet">
+	<link href="/static/css/datatables.responsive.css" rel="stylesheet">
+        <!--FooTable [ OPTIONAL ]-->
+    <link href="/static/css/footable.core.css" rel="stylesheet">
+
+   <script src="/static/js/jquery.datatables.js"></script>
+    <script src="/static/js/datatables.bootstrap.js"></script>
+	<script src="/static/js/datatables.responsive.min.js"></script>
+    <!--DataTables Sample [ SAMPLE ]-->
+    <script src="/static/js/tables-datatables.js"></script>
+    <!--FooTable [ OPTIONAL ]-->
+    <script src="/static/js/footable.all.min.js"></script>
+
+
+    <!--FooTable Example [ SAMPLE ]-->
+    <script src="/static/js/tables-footable.js"></script>
+
+
+{% endblock %}
+
+
+{% block page-title %}
+<h1 class="page-header text-overflow">Project Delivery</h1>
+{% endblock %}
+
+{% block content %}
+  <!--Breadcrumb-->
+                <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                <ol class="breadcrumb">
+					<li><a href="/">首页</a></li>
+
+					<li class="active">项目交付日志</li>
+                </ol>
+                <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                <!--End breadcrumb-->
+
+<div class="panel">
+					    <div class="panel-heading">
+					        <h3 class="panel-title">Project LOG</h3>
+                        </div>
+
+
+<br>
+<br>
+                            <!-- Foo Table - Pagination -->
+                    <!--===================================================-->
+                    <div class="panel-body">
+					                <label class="form-inline">Show
+					                    <select id="demo-show-entries" class="form-control input-sm">
+					                        <option value="5">5</option>
+					                        <option value="10">10</option>
+					                        <option value="15">15</option>
+					                        <option value="20">20</option>
+					                    </select>
+					                    entries
+					                </label>
+					                <table id="demo-foo-pagination" class="table toggle-arrow-tiny" data-page-size="5">
+					                    <thead>
+					                        <tr>
+					                            <th data-toggle="true">序号</th>
+					                            <th>项目环境</th>
+					                            <th>所属业务线</th>
+					                            <th>项目名称</th>
+                                                <th>项目版本</th>
+					                            <th>操作用户</th>
+                                                <th>操作时间</th>
+                                                <th data-hide="all">内容</th>
+					                        </tr>
+					                    </thead>
+					                    <tbody>
+                                        {% for data in data_list %}
+                                        <tr>
+                                          <td>{{ forloop.counter }}</td>
+                                        <td>
+                                        {% if data.project.project_env == 'sit' %}
+                                            <span class="label label-success">测试环境</span>
+                                        {% elif data.project.project_env == 'qa' %}
+                                            <span class="label label-warning">预生产环境</span>
+                                        {% elif data.project.project_env == 'uat' %}
+                                            <span class="label label-danger">生产环境</span>
+                                        {% endif %}
+                                        </td>
+					                            <td>{{ data.project.project}}</td>
+					                            <td>{{ data.project_name }}</td>
+					                            <td>{{ data.project_branch }}</td>
+					                            <td>{{ data.project_user }}</td>
+                                            <td>{{ data.create_time}}</td>
+                                            <td>{{ data.project_content }}</td>
+
+					                        </tr>
+                                        {% empty %}
+                                         <tr>没有数据！</tr>
+                                        {% endfor %}
+
+					                    </tbody>
+					                    <tfoot>
+					                        <tr>
+					                            <td colspan="5">
+					                                <div class="text-right">
+					                                    <ul class="pagination"></ul>
+					                                </div>
+					                            </td>
+					                        </tr>
+					                    </tfoot>
+					                </table>
+					            </div>
+                    <!--===================================================-->
+                    <!-- End Foo Table - Pagination -->
+					</div>
+
+
+{% endblock %}

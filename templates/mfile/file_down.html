@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    <title> ALANCMDB-文件下载 </title>
+{% endblock %}
+
+
+{% block css-js %}
+    <!--Ion Icons [ OPTIONAL ]-->
+    <link href="/static/css/ionicons.min.css" rel="stylesheet">
+    <script src="/static/js/layer/layer.js"></script>
+    <!--Nifty Premium Icon [ DEMONSTRATION ]-->
+    <link href="/static/css/nifty-demo-icons.min.css" rel="stylesheet">
+        <!--DataTables [ OPTIONAL ]-->
+    <link href="/static/css/datatables.bootstrap.css" rel="stylesheet">
+    <link href="/static/css/datatables.responsive.css" rel="stylesheet">
+
+    <script src="/static/js/jquery.datatables.js"></script>
+    <script src="/static/js/datatables.bootstrap.js"></script>
+    <script src="/static/js/datatables.responsive.min.js"></script>
+    <!--DataTables Sample [ SAMPLE ]-->
+    <script src="/static/js/tables-datatables.js"></script>
+
+{#<script src="/static/js/ace/ace.js"></script>#}
+{#<script src="/static/js/ace/ext-language_tools.js"></script>#}
+{#<script src="/static/js/ace/theme-monokai.js"></script>#}
+
+
+
+{% endblock %}
+
+
+{% block page-title %}
+    <h1 class="page-header text-overflow">文件下载</h1>
+{% endblock %}
+
+{% block content %}
+      <!--Breadcrumb-->
+                <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                <ol class="breadcrumb">
+					<li><a href="/">首页</a></li>
+					<li><a href="/mfile/">文件管理</a></li>
+					<li class="active">文件下载</li>
+                </ol>
+                <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                <!--End breadcrumb-->
+    {% if message %}
+        <div class="alert alert-warning">{{ message }}</div>
+    {% endif %}
+    <div class="row">
+        <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">文件下载</h3>
+        </div>
+            <div class="panel-body">
+
+                <div class="col-lg-4">
+                <legend><i class="fa  fa-paper-plane-o"></i> 文件选项</legend>
+                    <form class="form-horizontal" id="filedown_form" role="form"  method="POST">
+                    {% csrf_token %}
+                        {#            {{ form }}#}
+                        {% for item in form %}
+                            <div class="form-group">
+                                <label class="col-ms-10 control-label"
+                                       style="margin-left: 10px;">{{ item.label }}</label>
+
+                                <div class="col-ms-10" style="margin-left: 10px;">
+                                    {{ item }}
+
+                                </div>
+
+                                <div class="col-ms-10" style="margin-left: 10px;">
+                                    {{ item.errors }}
+                                </div>
+                            </div>
+
+                        {% endfor %}
+                        <input type="hidden" name="uuidkey" value="{{ uuidkey }}">
+                        <div class="form-group">
+                            <div class="box-footer" style="margin-left: 10px;width: 530px;">
+                                <button type="button"  class="btn btn-primary" style="width: 60pt"
+                                        id="run_ansible_model" onclick="runAnsibleModel(this)"
+                                        >查找
+                                </button>
+                                <button type="button" style="width: 60pt" onclick="repealFromVaule(this)" class="btn btn-default" >撤销</button>
+
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+        <div class="col-lg-8">
+             <legend><i class="fa  fa-paper-plane-o"></i> 远程文件列表</legend>
+                    <div id="result"></div>
+
+
+        </div>
+            </div>
+        </div>
+    </div>
+<div style="visibility:hidden"><a id="scrollToTop"></a></div>
+
+
+<script>
+function runAnsibleModel(obj) {
+		var btnObj = $(obj);
+		btnObj.attr('disabled',true);
+		var form = document.getElementById('filedown_form');
+		var post_data = {};
+		for (var i = 1; i < form.length; ++i) {
+			var name = form[i].name;
+			var value = form[i].value;
+			var project = name.indexOf("ansible_model");
+			if ( project==0 && value.length==0 && name!="ansible_args"){
+				window.wxc.xcConfirm("请注意必填项不能为空~", window.wxc.xcConfirm.typeEnum.error);
+				btnObj.removeAttr('disabled');
+				return false;
+			}
+		};
+
+		$.ajax({
+			url:'/mfile/find/', //请求地址
+			type:"POST",  //提交类似
+			data:$('#filedown_form').serialize(),  //提交参数
+            {#processData: false, //因为data值是FormData对象，不需要对数据做处理#}
+            {#data: new FormData($('#ansible_moudel_form')),#}
+			success:function(response){
+				btnObj.removeAttr('disabled');
+				if (response["code"] == "500"){
+/* 					clearInterval(interval); */
+					btnObj.removeAttr('disabled');
+					window.wxc.xcConfirm(response["msg"], window.wxc.xcConfirm.typeEnum.error);
+				}
+				else{
+					var trHtml = '';
+					for (var i = 1; i < response["data"].length; ++i) {
+						if (response['data'][i]["islnk"] ){
+							var button = '<button type="button" class="btn btn-xs btn-default" disabled><abbr title="软连接不支持下载"><i class="fa  fa-cloud-download"></i></button>';
+						}else if(response['data'][i]["size"] > 500 ){
+							var button = '<button type="button" class="btn btn-xs btn-default" disabled><abbr title="文件过大不支持下载"><i class="fa  fa-cloud-download"></i></button>';
+						}else{
+							var button = '<button type="button" name="download_button" class="btn btn-xs btn-default" onclick="downLoadOrderFiles(this,\'' + response['data'][i]["path"] + '\',\'' + response['data'][i]["host"] +'\')"><abbr title="下载"><i class="ti-cloud-down"></i></button>';
+						}
+						trHtml += '<tr><td>'+ i +'</td><td>'+ response['data'][i]["host"] +'</td><td>'+ response['data'][i]["path"] + '</td><td>' + response['data'][i]["size"] + '</td><td>'+ response['data'][i]["islnk"] + '</td><td class="text-center">'+ button +'</td></tr>'
+					};
+					var vTableHtml = '<div id="result">' +
+										'<table id="demo-dt-selection" class="table table-bordered table-striped" >' +
+
+											'<thead>' +
+												'<tr>'+
+													'<th>id</th>'+
+													'<th>主机</th>'+
+													'<th>文件路径</th>'+
+													'<th>文件大小(KB)</th>'+
+													'<th>是否软连接</th>'+
+													'<th>下载</th>'+
+													'</tr>'+
+											'</thead>'+
+											'<tbody>' + trHtml +
+											'</tbody>'+
+										'</table>'+
+									'</div>'
+					$("#result").html(vTableHtml);
+					$('#demo-dt-selection').dataTable( {
+					    "order": [[ 3, 'desc' ], [ 3, 'desc' ]]
+					});
+				}
+			},
+
+	    	error:function(response){
+	    		btnObj.removeAttr('disabled');
+	    		window.wxc.xcConfirm("运行失败", window.wxc.xcConfirm.typeEnum.error);
+	    		clearInterval(interval);
+	    	}
+		})
+	}
+
+var downLoadFile = function (options) {
+	    var config = $.extend(true, { method: 'post' }, options);
+	    var $iframe = $('<iframe id="down-file-iframe"/>');
+	    var $form = $("<form target='down-file-iframe' method=" + config.method + " />");
+	    $form.attr('action', config.url);
+	    for (var key in config.data) {
+	        $form.append('<input type="hidden" name="' + key + '" value="' + config.data[key] +  '"/>');
+	    }
+	    $form.append("{% csrf_token %}");
+	    $iframe.append($form);
+	    $(document.body).append($iframe);
+	    $form[0].submit();
+	    $iframe.remove();
+	};
+
+	function downLoadOrderFiles(obj,path,host){
+		$("button[name='download_button']").attr("disabled",true);
+	    var url = '/mfile/down/';
+	    {#var data = new FormData(document.getElementById('filedown_form'));#}
+        {#    data.append('path', path);#}
+        {#    data.append('dest_server', host);#}
+        var data = {
+				'inventory':document.getElementById('id_inventory').value,
+				'content':document.getElementById('id_content').value,
+				'path':path,
+				'dest_server':host
+         };
+        downLoadFile({ //调用下载方法
+		        url:url,data:data
+		        });
+        $("button[name='download_button']").attr("disabled",false);
+		}
+		function repealFromVaule(){
+		   document.getElementById("deployRun").reset();}
+
+
+            {#var form = new FormData(document.getElementById('filedown_form'));#}
+            {#form.append('path', path);#}
+            {#form.append('dest_server', host);#}
+            {#$.ajax({#}
+            {#    url: '/mfile/down/', //请求地址#}
+            {#    type: "POST",  //提交类似#}
+            {#    data: form,#}
+            {#    processData: false,#}
+            {#    contentType: false,#}
+                {#data: $('#fileup_form').serialize(),  //提交参数#}
+                {#processData: false, //因为data值是FormData对象，不需要对数据做处理#}
+                {#data: new FormData($('#ansible_moudel_form')),#}
+            {#    success: function (response) {#}
+                    {#btnObj.removeAttr('disabled');#}
+            {#        $("button[name='download_button']").attr("disabled",false);#}
+            {#        if (response["code"] == "500") {#}
+                        {#clearInterval(interval);#}
+                        {#btnObj.removeAttr('disabled');#}
+            {#            window.wxc.xcConfirm(response["msg"], window.wxc.xcConfirm.typeEnum.error);#}
+            {#        }#}
+            {##}
+            {#    },#}
+            {#    error: function (response) {#}
+                    {#btnObj.removeAttr('disabled');#}
+            {#        $("button[name='download_button']").attr("disabled",false);#}
+            {#        window.wxc.xcConfirm("运行失败", window.wxc.xcConfirm.typeEnum.error);#}
+            {#        clearInterval(interval);#}
+            {#    }#}
+            {#})}#}
+</script>
+
+
+
+{% if errorInfo %}
+	window.wxc.xcConfirm("{{errorInfo}}", window.wxc.xcConfirm.typeEnum.error);
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,6 @@
+---
+- hosts: all
+  tasks:
+  - debug:
+      msg: Testing a binary module written in Rust
+  - shell: who

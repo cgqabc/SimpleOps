@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+<title> Celery 计划任务</title>
+{% endblock %}
+
+
+{% block css-js %}
+
+  <!--DataTables [ OPTIONAL ]-->
+    <link href="/static/css/datatables.bootstrap.css" rel="stylesheet">
+	<link href="/static/css/datatables.responsive.css" rel="stylesheet">
+
+   <script src="/static/js/jquery.datatables.js"></script>
+    <script src="/static/js/datatables.bootstrap.js"></script>
+	<script src="/static/js/datatables.responsive.min.js"></script>
+    <!--DataTables Sample [ SAMPLE ]-->
+    <script src="/static/js/tables-datatables.js"></script>
+
+
+
+{% endblock %}
+
+
+{% block page-title %}
+<h1 class="page-header text-overflow">JOBS Manger</h1>
+{% endblock %}
+
+{% block content %}
+
+<div class="panel">
+					    <div class="panel-heading">
+					        <h3 class="panel-title">计划任务表</h3>
+                        </div>
+
+                            <li class="pull-left btn">
+                            <a href="{% url 'job_add' %}" class="btn btn-success btn-bock" >
+                                <b>新增任务</b>
+                            </a>
+                            </li>
+
+<br>
+<br>
+        <div class="panel-body">
+
+                        <table id="demo-dt-selection" class="table table-bordered table-striped">
+            <thead>
+            <tr>
+              <th>序号</th>
+              <th>任务名称</th>
+              <th>任务指令</th>
+              <th>运行次数</th>
+              <th>上次运行时间</th>
+              <th>修改时间</th>
+              <th>过期时间</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+
+                {% for data in data_list %}
+                <tr>
+                  <td>{{ forloop.counter }}</td>
+
+                  <td class="text-red text-bold">{{ data.name }}</td>
+                  <td>{{ data.task }}</td>
+                  <td>{{ data.total_run_count }}</td>
+                  <td>{{ data.data_changed|date:"Y/m/d [H:m:s]" }}</td>
+                  <td>{{ data.expires|date:"Y/m/d [H:m:s]" }}</td>
+                  <td>{{ data.last_run_at|default_if_none:"-" }}</td>
+                    {% if data.enabled %}
+                      <td><label class="label label-success">启用</label></td>
+                    {% else %}
+                      <td><label class="label label-warning">停用</label></td>
+                    {% endif %}
+
+                <td class="text-center" data-editable='false'>
+                                        <a href="{% url 'job_edit' data.id %}" class="btn btn-sm btn-info">编辑</a>
+                                        <a href="{% url 'job_del' data.id %}" class="btn btn-sm btn-danger user_del"  onclick="return confirm('确认删除？')">删除</a>
+                                    </td>
+                </tr>
+                {% empty %}
+                  <tr>没有数据！</tr>
+                {% endfor %}
+
+            </tbody>
+
+          </table>
+
+
+					    </div>
+					</div>
+
+
+{% endblock %}

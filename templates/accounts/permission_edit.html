@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+<title> ALANCMDB-权限修改 </title>
+{% endblock %}
+
+
+{% block css-js %}
+
+    <!--Nifty Premium Icon [ DEMONSTRATION ]-->
+    <link href="/static/css/nifty-demo-icons.min.css" rel="stylesheet">
+
+
+
+{% endblock %}
+
+
+{% block page-title %}
+<h1 class="page-header text-overflow">Create User</h1>
+{% endblock %}
+
+{% block content %}
+
+    <form class="form-horizontal" role="form" action={% url "permission_edit" ids %} method="POST" >
+    {% csrf_token %}
+              <div class="box-body">
+        {% for item in form %}
+            <div class="form-group">
+                <label class="col-sm-2 control-label">{{item.label}}</label>
+
+                <div class="col-ms-10" style="margin-left: 10px;">
+                    {{item}}
+                </div>
+                <div class="col-ms-10" style="margin-left: 10px;">
+                    {{item.errors}}
+                </div>
+            </div>
+            <input type="hidden" name="id" value="{{ item.id }}">
+        {% endfor %}
+        <div class="form-group">
+            <div class="box-footer" style="margin-left: 10px;width: 530px;">
+        <input type="submit" class="btn btn-primary" style="width: 60pt" value="提交">
+        <a href="{% url 'permission_list' %}"><li style="width: 60pt" class="btn btn-primary" value="">返回</li></a>
+            </div>
+        </div>
+              </div>
+    </form>
+{% endblock %}

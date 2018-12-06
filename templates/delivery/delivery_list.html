@@ -1,0 +1,237 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+<title> 项目交付列表 </title>
+{% endblock %}
+
+
+{% block css-js %}
+
+  <!--DataTables [ OPTIONAL ]-->
+    <link href="/static/css/datatables.bootstrap.css" rel="stylesheet">
+	<link href="/static/css/datatables.responsive.css" rel="stylesheet">
+        <!--FooTable [ OPTIONAL ]-->
+    <link href="/static/css/footable.core.css" rel="stylesheet">
+
+   <script src="/static/js/jquery.datatables.js"></script>
+    <script src="/static/js/datatables.bootstrap.js"></script>
+	<script src="/static/js/datatables.responsive.min.js"></script>
+    <!--DataTables Sample [ SAMPLE ]-->
+    <script src="/static/js/tables-datatables.js"></script>
+    <!--FooTable [ OPTIONAL ]-->
+    <script src="/static/js/footable.all.min.js"></script>
+
+
+    <!--FooTable Example [ SAMPLE ]-->
+    <script src="/static/js/tables-footable.js"></script>
+
+
+{% endblock %}
+
+
+{% block page-title %}
+<h1 class="page-header text-overflow">Project Delivery</h1>
+{% endblock %}
+
+{% block content %}
+  <!--Breadcrumb-->
+                <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                <ol class="breadcrumb">
+					<li><a href="/">首页</a></li>
+
+					<li class="active">项目交付列表</li>
+                </ol>
+                <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                <!--End breadcrumb-->
+
+<div class="panel">
+					    <div class="panel-heading">
+					        <h3 class="panel-title">Project Delivery</h3>
+                        </div>
+
+                            <li class="pull-left btn">
+                            <a href="{% url 'delivery_add' %}" class="btn btn-success btn-bock" >
+                                <b>新增交付项目</b>
+                            </a>
+                            </li>
+
+<br>
+<br>
+                            <!-- Foo Table - Pagination -->
+                    <!--===================================================-->
+                    <div class="panel-body">
+					                <label class="form-inline">Show
+					                    <select id="demo-show-entries" class="form-control input-sm">
+					                        <option value="5">5</option>
+					                        <option value="10">10</option>
+					                        <option value="15">15</option>
+					                        <option value="20">20</option>
+					                    </select>
+					                    entries
+					                </label>
+					                <table id="demo-foo-pagination" class="table toggle-arrow-tiny" data-page-size="5">
+					                    <thead>
+					                        <tr>
+					                            <th data-toggle="true">序号</th>
+					                            <th>所属业务线</th>
+					                            <th>项目名称</th>
+					                            <th>环境</th>
+					                            <th>仓库地址</th>
+					                            <th>激活状态</th>
+                                                <th>操作</th>
+                                                <th data-hide="all">打包目录</th>
+                                                <th data-hide="all">远程命令</th>
+                                                <th data-hide="all">远程路径</th>
+                                                <th data-hide="all">排除文件</th>
+                                                <th data-hide="all">编译类型</th>
+                                                <th data-hide="all">编译命令</th>
+{#                                                <th data-hide="all">目标服务器</th>#}
+                                                <th data-hide="all">目录属主</th>
+                                                <th data-hide="all">目标服务器</th>
+                                                <th data-hide="all">uuid</th>
+					                        </tr>
+					                    </thead>
+					                    <tbody>
+                                        {% for data in data_list %}
+                                        <tr>
+                                          <td>{{ forloop.counter }}</td>
+
+					                            <td>{{ data.project }}</td>
+					                            <td>{{ data.project_name }}</td>
+					                            <td>{{ data.project_env }}</td>
+					                            <td>{{ data.project_address }}</td>
+                                             {% if data.project_status == 1 %}
+                                                 <td>
+
+                                                     <button  type="button" class="btn btn-outline btn-success">已初始化</button>
+                                                 </td>
+
+                                            {% else %}
+                                                <td>
+                                                <button  type="button" class="btn btn-outline btn-warning" onclick="initProject(this,'{{data.project_name}}',{{data.id}})">未初始化</button>
+
+                                                </td>
+                                            {% endif %}
+
+
+
+					                             <td class="text-center" data-editable='false'>
+                                        <a href="{% url 'delivery_edit' data.id %}" class="btn btn-sm btn-info">编辑</a>
+                                        <a href="{% url 'delivery_run' data.id %}" class="btn btn-sm btn-info">运行</a>
+                                        <a href="{% url 'delivery_del' data.id %}" class="btn btn-sm btn-danger user_del"  onclick="return confirm('确认删除？')">删除</a>
+                                    </td>
+                                            <td>{{ data.project_repo_dir }}</td>
+                                            <td>{{ data.project_remote_command }}</td>
+                                            <td>{{ data.project_dir }}</td>
+                                            <td>{{ data.project_exclude }}</td>
+                                            <td>{{ data.project_type }}</td>
+                                            <td>{{ data.project_local_command }}</td>
+                                            <td>{{ data.project_user }}</td>
+                                            <td>{{ data.server }}</td>
+                                            <td>{{ data.project_uuid }}</td>
+					                        </tr>
+                                        {% empty %}
+                                         <tr>没有数据！</tr>
+                                        {% endfor %}
+
+					                    </tbody>
+					                    <tfoot>
+					                        <tr>
+					                            <td colspan="5">
+					                                <div class="text-right">
+					                                    <ul class="pagination"></ul>
+					                                </div>
+					                            </td>
+					                        </tr>
+					                    </tfoot>
+					                </table>
+					            </div>
+                    <!--===================================================-->
+                    <!-- End Foo Table - Pagination -->
+					</div>
+
+<script>
+function initProject(obj,name,id){
+		var txt=  "是否确认初始化（"+ name + "）";
+		var btnObj = $(obj);
+		btnObj.attr('disabled',true);
+		var option = {
+			title: "初始化项目",
+			btn: parseInt("0011",2),
+			onOk: function(){
+				$.ajax({
+					  type: 'POST',
+					  url: '/delivery/init/'+id+'/',
+				      success:function(response){
+				    	  if (response['code']==200){
+						    	btnObj.removeAttr('disabled');
+			                	window.wxc.xcConfirm("初始化成功！", window.wxc.xcConfirm.typeEnum.success);
+			                	location.reload('/delivery/list/');
+				    	  }
+				    	  else{
+				            	btnObj.removeAttr('disabled');
+				            	window.wxc.xcConfirm("初始化失败，失败原因："+response['msg'], window.wxc.xcConfirm.typeEnum.error);
+				    	  }
+
+				      },
+		              error:function(response){
+		            	btnObj.removeAttr('disabled');
+		            	window.wxc.xcConfirm("初始化失败", window.wxc.xcConfirm.typeEnum.error);
+		              }
+					});
+			},
+			onCancel:function(){
+			},
+			onClose:function(){
+			}
+		}
+		window.wxc.xcConfirm(txt, "custom", option);
+	}
+
+
+	function projcectVersion(obj,model,id,op){
+		var btnObj = $(obj);
+		btnObj.attr('disabled',true);
+		if (op == 'create'){
+			txt = "请输入要创建的分支：";
+		}
+		else{
+			txt = "请输入要删除的分支：";
+		};
+		window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.input,{
+			onOk:function(result){
+				if (result.length == 0){
+					/* 如果没有输入字符串则直接退出 */
+					return;
+				};
+				$.ajax({
+					  type: 'POST',
+					  url: '/delivery/version/' + id + '/',
+					  data: {
+						  "model":model,
+						  'name':result,
+						  'op':op,
+					  },
+				      success:function(response){
+
+			                if (response["code"]=="200"){
+			                	window.wxc.xcConfirm(response["msg"], window.wxc.xcConfirm.typeEnum.success);
+			                }
+				        	else{
+				        		window.wxc.xcConfirm("分支操作错误：" + response["msg"], window.wxc.xcConfirm.typeEnum.error);
+				        	};
+			                btnObj.removeAttr('disabled');
+					},
+		            error:function(response){
+		            	btnObj.removeAttr('disabled');
+		            	window.wxc.xcConfirm("创建分支失败", window.wxc.xcConfirm.typeEnum.error);
+		            },
+					});
+
+			}
+		});
+   }
+
+</script>
+{% endblock %}

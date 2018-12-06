@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+<title> ALANCMDB-角色管理 </title>
+{% endblock %}
+
+
+{% block css-js %}
+
+        <!--DataTables [ OPTIONAL ]-->
+    <link href="/static/css/datatables.bootstrap.css" rel="stylesheet">
+	<link href="/static/css/datatables.responsive.css" rel="stylesheet">
+
+   <script src="/static/js/jquery.datatables.js"></script>
+    <script src="/static/js/datatables.bootstrap.js"></script>
+	<script src="/static/js/datatables.responsive.min.js"></script>
+    <!--DataTables Sample [ SAMPLE ]-->
+    <script src="/static/js/tables-datatables.js"></script>
+
+{% endblock %}
+
+
+{% block page-title %}
+<h1 class="page-header text-overflow">User Manger</h1>
+{% endblock %}
+
+{% block content %}
+
+<div class="panel">
+					    <div class="panel-heading">
+					        <h3 class="panel-title">角色管理</h3>
+					    </div>
+
+{#                        <div class="col-sm-2" style="padding-left: 0">#}
+                            <a href="{% url 'role_add' %}" style="margin: 20px">
+                                <li class="btn btn-success"><b>添加角色</b></li>
+                            </a>
+{#                        </div>#}
+        <div class="panel-body">
+
+
+
+					        <table id="demo-dt-selection" class="table table-striped table-bordered" cellspacing="0" width="100%">
+
+					            <thead>
+					                <tr>
+					                    <th class="min-desktop">角色名称</th>
+                                        <th class="min-desktop">操作</th>
+					                </tr>
+					            </thead>
+					            <tbody>
+                            {% for i in all_role %}
+                                    <tr class="even gradeX">
+                                        <td>{{ i.name }}</td>
+                                        <td class="text-center" data-editable='false'>
+{#                                        <a href="{% url 'user_edit' %}?id={{ host.id }}" class="btn btn-xs btn-info">编辑</a>#}
+                                        <a href="{% url 'role_edit' i.id %}" class="btn btn-sm btn-info">编辑</a>
+                                        <a href="{% url 'role_del' i.id %}" class="btn btn-sm btn-danger user_del" onclick="return confirm('确认删除？')">删除</a>
+                                    </td>
+                                    </tr>
+                                {% endfor %}
+					                </tr>
+
+					            </tbody>
+					        </table>
+					    </div>
+					</div>
+{% endblock %}

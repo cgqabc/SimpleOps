@@ -1,0 +1,6 @@
+---
+- hosts: 192.168.0.110
+  tasks:
+  - debug:
+      msg: Testing a binary module written in Rust
+  - shell: who

@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    <title> ALANCMDB-待审核资产表 </title>
+{% endblock %}
+
+
+{% block css-js %}
+
+  <!--DataTables [ OPTIONAL ]-->
+    <link href="/static/css/datatables.bootstrap.css" rel="stylesheet">
+	<link href="/static/css/datatables.responsive.css" rel="stylesheet">
+
+   <script src="/static/js/jquery.datatables.js"></script>
+    <script src="/static/js/datatables.bootstrap.js"></script>
+	<script src="/static/js/datatables.responsive.min.js"></script>
+    <!--DataTables Sample [ SAMPLE ]-->
+    <script src="/static/js/tables-datatables.js"></script>
+
+
+
+{% endblock %}
+
+
+{% block page-title %}
+    <h1 class="page-header text-overflow">Asset Manger</h1>
+{% endblock %}
+
+{% block content %}
+     {% if message %}
+                  <div class="alert alert-warning">{{ message }}</div>
+              {% endif %}
+
+<div class="panel">
+					    <div class="panel-heading">
+					        <h3 class="panel-title">待审批资产</h3>
+					    </div>
+
+{#                        <div class="col-sm-2" style="padding-left: 0">#}
+                            <a href="{% url 'cmdb:asset_add' %}" style="margin: 20px">
+                                <li class="btn btn-success"><b>新增资产</b></li>
+                            </a>
+ <li class="pull-right btn">
+                                 <form  method="post" enctype="multipart/form-data" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"  id="assets_form">
+                            {% csrf_token %}
+                    <li class="btn btn-success btn-file">
+					                        <input type="file" name="batch_import">
+                                    <b>上传excel文件</b>
+                                </li>
+                                     <li class="btn ">
+                                     <button id="batch_import" class="btn btn-success">
+                                         <b>批量导入</b>
+                                     </button>
+                                     </li>
+</form>
+</li>
+<br>
+<br>
+{#                        </div>#}
+        <div class="panel-body">
+
+                        <table id="demo-dt-selection" class="table table-bordered table-striped">
+            <thead>
+            <tr>
+              <th>序号</th>
+              <th>资产类型</th>
+              <th>资产名称</th>
+              <th>SN</th>
+              <th>位置</th>
+                <th>创建时间</th>
+              <th>更新时间</th>
+
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+
+                {% for asset in asset_data %}
+                <tr>
+                  <td>{{ forloop.counter }}</td>
+                  {% if asset.asset_type == 'server' or asset.asset_type == 'vmserver' or asset.asset_type == 'docker' %}
+                      <td class="text-green text-bold">{{ asset.get_asset_type_display }}</td>
+
+                  {% elif asset.asset_type == "netdevice" %}
+                      <td class="text-yellow text-bold">{{ asset.get_asset_type_display }}</td>
+
+                  {% elif asset.asset_type == "storagedevice" %}
+                      <td class="text-blue text-bold">{{ asset.get_asset_type_display }}</td>
+
+                  {% elif asset.asset_type == "others" %}
+                      <td class="text-red text-bold">{{ asset.get_asset_type_display }}</td>
+
+                  {% endif %}
+                    {% if asset.asset_type == 'server' %}
+                        <td><a href="{% url 'cmdb:detail' asset.id %}">{{ asset.name }}</a></td>
+                    {% else %}
+                        <td>{{ asset.name }}</td>
+                    {% endif %}
+                  <td>{{ asset.sn }}</td>
+
+                  <td>{{ asset.site|default:"-" }}</td>
+                <td>{{ asset.c_time|date:"Y/m/d [H:m:s]" }}</td>
+                  <td>{{ asset.m_time|date:"Y/m/d [H:m:s]" }}</td>
+
+                <td class="text-center" data-editable='false'>
+                    {% if asset.id %}
+                                        <a href="{% url 'cmdb:new_asset_allow' asset.id %}" class="btn btn-sm btn-info">确认新增</a>
+                                        <a href="{% url 'cmdb:new_asset_del' asset.id %}" class="btn btn-sm btn-danger user_del"  onclick="return confirm('确认删除？')">删除资产</a>
+                    {% endif %}
+                                    </td>
+                </tr>
+                {% empty %}
+                  <tr>没有数据！</tr>
+                {% endfor %}
+
+            </tbody>
+          </table>
+
+
+					    </div>
+					</div>
+
+    <script>
+$('#batch_import').click(function(){
+        $.ajax({
+            {#dataType: "JSON",#}
+            url: '/cmdb/asset_batch_import/', //请求地址
+            type: "POST",  //提交类似
+            cache: false, //上传文件不需要缓存。
+            processData: false, //因为data值是FormData对象，不需要对数据做处理
+            contentType: false,  //因为是由<form>表单构造的FormData对象，且已经声明了属性enctype="multipart/form-data"，所以这里设置为false
+            data: new FormData($('#assets_form')[0]),
+            success: function (response) {
+                {#document.getElementById("ajax-log").innerHTML=response['data'];#}
+                alert("新增资产已成功添加到待审区！");
+            },
+            error: function () {
+                alert("新增资产失败，请检查数据！");//获取抛出的错误信息
+                },
+        })})
+</script>
+
+{% endblock %}

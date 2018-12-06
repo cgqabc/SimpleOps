@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    <title> ALANCMDB-运行模块 </title>
+{% endblock %}
+
+
+{% block css-js %}
+    <!--Ion Icons [ OPTIONAL ]-->
+    <link href="/static/css/ionicons.min.css" rel="stylesheet">
+    <script src="/static/js/layer/layer.js"></script>
+    <!--Nifty Premium Icon [ DEMONSTRATION ]-->
+    <link href="/static/css/nifty-demo-icons.min.css" rel="stylesheet">
+
+{#<script src="/static/js/ace/ace.js"></script>#}
+{#<script src="/static/js/ace/ext-language_tools.js"></script>#}
+{#<script src="/static/js/ace/theme-monokai.js"></script>#}
+
+
+
+{% endblock %}
+
+
+{% block page-title %}
+    <h1 class="page-header text-overflow">Run Moudels</h1>
+{% endblock %}
+
+{% block content %}
+      <!--Breadcrumb-->
+                <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                <ol class="breadcrumb">
+					<li><a href="/">首页</a></li>
+					<li><a href="/deploy/">应用部署</a></li>
+					<li class="active">模块执行</li>
+                </ol>
+                <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                <!--End breadcrumb-->
+    {% if message %}
+        <div class="alert alert-warning">{{ message }}</div>
+    {% endif %}
+    <div class="row">
+        <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">模块执行</h3>
+        </div>
+            <div class="panel-body">
+
+                <div class="col-lg-4">
+                <legend><i class="fa  fa-paper-plane-o"></i> 模块选择</legend>
+                    <form class="form-horizontal" id="ansible_moudel_form" role="form"  method="POST">
+                    {% csrf_token %}
+                        {#            {{ form }}#}
+                        {% for item in form %}
+                            <div class="form-group">
+                                <label class="col-ms-10 control-label"
+                                       style="margin-left: 10px;">{{ item.label }}</label>
+
+                                <div class="col-ms-10" style="margin-left: 10px;">
+                                    {{ item }}
+
+                                </div>
+
+                                <div class="col-ms-10" style="margin-left: 10px;">
+                                    {{ item.errors }}
+                                </div>
+                            </div>
+
+                        {% endfor %}
+                        <input type="hidden" name="uuidkey" value="{{ uuidkey }}">
+                        <div class="form-group">
+                            <div class="box-footer" style="margin-left: 10px;width: 530px;">
+                                <button type="button"  class="btn btn-primary" style="width: 60pt"
+                                        id="run_ansible_model" onclick="runAnsibleModel(this)"
+                                        >提交
+                                </button>
+                                <button type="button" style="width: 60pt" onclick="repealFromVaule(this)" class="btn btn-default" >撤销</button>
+
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+        <div class="col-lg-8">
+                                    <legend><i class="fa  fa-paper-plane-o"></i> 执行结果</legend>
+									<pre class="html">
+                                        <div id="result"></div>
+				                    </pre>
+
+        </div>
+            </div>
+        </div>
+    </div>
+<div style="visibility:hidden"><a id="scrollToTop"></a></div>
+
+{#    <script>#}
+{#        require("ace/ext/old_ie"); //引入兼容IE的模块#}
+{#        ace.require("ace/ext/language_tools"); //引入代码补全和提示模块#}
+{#        var editor = ace.edit("result"); //以id为compile-editor的html元素创建编辑器#}
+{#        editor.$blockScrolling = Infinity;#}
+{#        editor.setFontSize(16);#}
+{#        editor.session.setMode("ace/mode/javascript");#}
+{#        editor.setOptions({#}
+{#        enableBasicAutocompletion: true,#}
+{#        enableSnippets: true,#}
+{#        enableLiveAutocompletion: true#}
+{#        });#}
+{#        editor.setTheme("ace/theme/monokai");#}
+{##}
+{#    </script>#}
+<script>
+function runAnsibleModel(obj) {
+		var btnObj = $(obj);
+		btnObj.attr('disabled',true);
+		var form = document.getElementById('ansible_moudel_form');
+		var post_data = {};
+		for (var i = 1; i < form.length; ++i) {
+			var name = form[i].name;
+			var value = form[i].value;
+			var project = name.indexOf("ansible_model");
+			if ( project==0 && value.length==0 && name!="ansible_args"){
+				window.wxc.xcConfirm("请注意必填项不能为空~", window.wxc.xcConfirm.typeEnum.error);
+				btnObj.removeAttr('disabled');
+				return false;
+			}
+		};
+		$("#result").html("服务器正在处理，请稍等。。。");
+		/* 轮训获取结果 开始  */
+	   var interval = setInterval(function(){
+	        $.ajax({
+	            url : '/deploy/run_result/',
+	            type : 'post',
+	            data:$('#ansible_moudel_form').serialize(),
+                {#processData: false, //因为data值是FormData对象，不需要对数据做处理#}
+                {#data: new FormData($('#ansible_moudel_form')),#}
+	            success : function(result){
+	            	if (result["msg"] !== null ){
+	            		$("#result").append("<p>"+result["msg"]+"</p>");
+	            		document.getElementById("scrollToTop").scrollIntoView();
+	            		if (result["msg"].indexOf("[Done]") == 0){
+	            			clearInterval(interval);
+	            			window.wxc.xcConfirm("Ansible执行完成", window.wxc.xcConfirm.typeEnum.success);
+	            			btnObj.removeAttr('disabled');
+	            		}
+	            	}
+	            },
+		    	error:function(response){
+		    		btnObj.removeAttr('disabled');
+		    		clearInterval(interval);
+		    	}
+	        });
+	    },1000); //每1秒轮询一次
+
+// 	    /* 轮训获取结果结束  */
+		$.ajax({
+			url:'/deploy/moudel/', //请求地址
+			type:"POST",  //提交类似
+			data:$('#ansible_moudel_form').serialize(),  //提交参数
+            {#processData: false, //因为data值是FormData对象，不需要对数据做处理#}
+            {#data: new FormData($('#ansible_moudel_form')),#}
+			success:function(response){
+				btnObj.removeAttr('disabled');
+				if (response["code"] == "500"){
+					clearInterval(interval);
+					btnObj.removeAttr('disabled');
+					window.wxc.xcConfirm(response["msg"], window.wxc.xcConfirm.typeEnum.error);
+				}
+
+			},
+	    	error:function(response){
+	    		btnObj.removeAttr('disabled');
+	    		window.wxc.xcConfirm("运行失败", window.wxc.xcConfirm.typeEnum.error);
+	    		clearInterval(interval);
+	    	}
+		})
+	}
+
+
+	function repealFromVaule(){
+		   document.getElementById("deployRun").reset();
+	}
+</script>
+
+
+
+{% if errorInfo %}
+	window.wxc.xcConfirm("{{errorInfo}}", window.wxc.xcConfirm.typeEnum.error);
+{% endif %}
+
+{% endblock %}

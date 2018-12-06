@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    <title> ALANCMD-增加交付项目 </title>
+{% endblock %}
+
+
+{% block css-js %}
+<link href="/static/css/bootstrap-multiselect.css" rel="stylesheet">
+<script src="/static/js/bootstrap-multiselect.js"></script>
+
+{% endblock %}
+
+
+{% block page-title %}
+    <h1 class="page-header text-overflow">Project Add</h1>
+{% endblock %}
+
+{% block content %}
+ {% if message %}
+                  <div class="alert alert-warning">{{ message }}</div>
+              {% endif %}
+ <!--Breadcrumb-->
+                <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                <ol class="breadcrumb">
+					<li><a href="/">首页</a></li>
+					<li><a href="/delivery/list/">项目交付列表</a></li>
+					<li class="active">新增项目交付</li>
+                </ol>
+                <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                <!--End breadcrumb-->
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">新增项目交付</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-2">
+                        </div>
+
+                        <form class="form-horizontal" role="form" action={% url "delivery_add" %} method="POST">
+                            {% csrf_token %}
+                            <div class="col-lg-8">
+                                <fieldset>
+                                    {{ form }}
+
+                                </fieldset>
+                            <div class="form-group">
+								<label> 目标服务器: </label> <br>
+								<select multiple class="form-control" name="server" id="server"  required>
+{#<!-- 									{% for ds in serverList %}#}
+{#										<option name="server" value="{{ds.id}}">{{ds.ip}}</option> #}
+{#									{% endfor %} -->#}
+								</select>
+							</div>
+                            <br>
+                                <div class="form-group" style="margin-left: 10px;">
+{#                                    <div class="box-footer" style="margin-left: 10px;width: 530px;">#}
+                                        <button type="submit" class="pull-left btn btn-primary">
+                                            提交
+                                        </button>&nbsp;
+                                        <a class="pull-right btn btn-danger" href="{% url "cmdb:assets_info" %}">返回</a>
+{#                                    </div>#}
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+                    <!-- /.row (nested) -->
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+
+
+<script>
+$(document).ready(function(){
+    $('#id_project_service').attr("disabled",true);
+    $('#server').attr("disabled",true);
+    $('#id_project').change(oBtProjectSelect); //函数后面不加小括号，否则会自动执行
+    $('#id_project_service').change({"model":"service"},oBtServiceSelect); //函数后面不加小括号，否则会自动执行,加入传入数据时以字典方式传入，取出是为event.data.model
+    {#$('#id_project_service').bind('change','service',oBtServiceSelect); //函数后面不加小括号，否则会自动执行#}
+
+});
+
+function oBtProjectSelect(){
+
+	   $('#id_project_service').removeAttr("disabled");
+	   var obj = document.getElementById("id_project");
+	   var index = obj.selectedIndex;
+	   var projectId = obj.options[index].value;
+	   if ( projectId > 0){
+			$.ajax({
+				dataType: "JSON",
+				url:'/api/project/'+ projectId + '/', //请求地址
+				type:"GET",  //提交类似
+				success:function(response){
+					var binlogHtml = '<select class="form-control" name="project_service" id="id_project_service" onchange="oBtServiceSelect("service");" required><option selected="selected"  value="">请选择业务类型</option>'
+					var selectHtml = '';
+					for (var i=0; i <response["service_assets"].length; i++){
+						 selectHtml += '<option  value="'+ response["service_assets"][i]["id"] +'">' + response["service_assets"][i]["service_name"] + '</option>'
+					};
+					binlogHtml =  binlogHtml + selectHtml + '</select>';
+					document.getElementById("id_project_service").innerHTML= binlogHtml;
+
+				},
+			});
+	   }
+	   else{
+		   $('#id_project_service').attr("disabled",true);
+	   }
+
+}
+
+function oBtServiceSelect(event){
+ 	   $('#server').removeAttr("disabled");
+	   var obj = document.getElementById("id_project_service");
+	   var index = obj.selectedIndex;
+	   var sId = obj.options[index].value;
+	   {#alert(sId)#}
+	   if ( sId  > 0){
+			$.ajax({
+				dataType: "JSON",
+				url:'/cmdb/asset_server_query/', //请求地址
+				type:"POST",  //提交类似
+				data:{
+					{#"query":"service",#}
+					"query":event.data.model,
+					"id":sId
+				},
+				success:function(response){
+					var binlogHtml = '<select multiple  name="server" id="server"  required>'
+					var selectHtml = '';
+					for (var i=0; i < response["data"].length; i++){
+						 selectHtml += '<option name="server" value="'+ response["data"][i]["id"] +'">' + response["data"][i]["ip"] + ' | ' + response["data"][i]["project"] + ' | ' + response["data"][i]["service"] + '</option>';
+						 {#console.log(i)#}
+					};
+					binlogHtml =  binlogHtml + selectHtml + '</select>';
+                    {#alert(binlogHtml)#}
+					document.getElementById("server").innerHTML= binlogHtml;
+					$('#server').multiselect('destroy');
+ 				    $('#server').multiselect({
+				        enableClickableOptGroups: true,
+				        enableCollapsibleOptGroups: true,
+				        includeSelectAllOption: true,
+				       	enableFiltering: true,
+				    });
+				},
+			});
+	   }
+	   else{
+		   $('#server option:selected').empty();
+		   $('#server').attr("disabled",true);
+	   }
+
+}
+
+</script>
+{% endblock %}

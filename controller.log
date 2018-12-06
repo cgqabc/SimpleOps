@@ -1,0 +1,131 @@
+you are login... 2018-10-25 16:56:08
+2018-10-25 17:00:42,611  INFO  user.py user 5816 10872 you are login... 2018-10-25 17:00:34
+%(levelname)s (asctime)s  user.py user  you are login... 2018-10-26 10:47:56
+%(levelname)s (asctime)s  user.py user  you are login... 2018-10-26 10:47:56
+%(levelname)s (asctime)s  user.py user  you are login... 2018-10-26 10:47:56
+%(levelname)s (asctime)s  user.py user  you are login... 2018-10-30 09:56:16
+%(levelname)s (asctime)s  user.py user  you are login... 2018-10-30 09:56:16
+%(levelname)s (asctime)s  user.py user  you are login... 2018-10-30 10:00:53
+%(levelname)s (asctime)s  user.py user  you are login... 2018-10-30 10:03:15
+%(levelname)s (asctime)s  user.py user  you are login... 2018-10-30 10:05:05
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /chat/ajax/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /chat/ajax/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /chat/ajax/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /chat/ajax/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /chat/ajax/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /chat/ajax/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /chat/ajax/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /chat/ajax/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /chat/ajax/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /chat/ajax/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /chat/ajax/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /chat/ajax/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /chat/ajax/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /chat/ajax/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /chat/ajax/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /chat/ajax/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /chat/ajax/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /chat/ajax/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /chat/ajax/
+%(levelname)s (asctime)s  views.py views  get!!!
+%(levelname)s (asctime)s  views.py views  get!!!
+%(levelname)s (asctime)s  views.py views  get!!!
+%(levelname)s (asctime)s  views.py views  get!!!
+%(levelname)s (asctime)s  views.py views  get!!!
+%(levelname)s (asctime)s  views.py views  get!!!
+%(levelname)s (asctime)s  views.py views  get!!!
+%(levelname)s (asctime)s  views.py views  get!!!
+%(levelname)s (asctime)s  views.py views  get!!!
+%(levelname)s (asctime)s  views.py views  get!!!
+%(levelname)s (asctime)s  views.py views  get!!!
+%(levelname)s (asctime)s  views.py views  get!!!
+%(levelname)s (asctime)s  views.py views  get!!!
+%(levelname)s (asctime)s  views.py views  get!!!
+%(levelname)s (asctime)s  views.py views  get!!!
+%(levelname)s (asctime)s  views.py views  get!!!
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-02 09:35:59
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-02 20:10:21
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-03 10:13:19
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-04 11:40:50
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-06 09:15:49
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-07 09:10:09
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-07 11:15:10
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-07 15:12:19
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-07 15:12:19
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-08 09:29:21
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-08 10:14:00
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-08 10:14:00
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /admin/django_celery_beat/crontabschedule/add/
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-08 15:23:15
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-08 16:12:52
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-09 09:28:20
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-09 13:13:32
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /setup_jobs/job_add/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /setup_jobs/job_add/
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-12 10:11:39
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-12 10:11:39
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-12 10:56:16
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-15 14:45:02
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /deploy/inventory/add/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /deploy/inventory/add/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /deploy/inventory/add/
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-16 09:42:41
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-16 11:06:54
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-16 17:06:37
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-19 09:40:11
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-19 10:10:00
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-19 11:01:56
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-19 11:01:56
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-19 11:01:56
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-19 16:08:30
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /deploy/moudel/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /deploy/run_result/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /deploy/moudel/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /deploy/run_result/
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-20 09:45:58
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /deploy/moudel/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /deploy/run_result/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /deploy/moudel/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /deploy/run_result/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /deploy/run_result/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /deploy/run_result/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /deploy/run_result/
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-20 13:47:37
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-20 14:41:33
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-20 15:27:42
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-21 09:52:20
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-21 14:46:05
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-21 14:48:44
+%(levelname)s (asctime)s  ansible_api_v2.py ansible_api_v2  run playbook failed: 'unicode' object does not support item assignment
+%(levelname)s (asctime)s  ansible_api_v2.py ansible_api_v2  run playbook failed: 'unicode' object does not support item assignment
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /deploy/playbook_add/
+%(levelname)s (asctime)s  csrf.py csrf  Forbidden (CSRF token missing or incorrect.): /deploy/playbook_add/
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-21 16:35:52
+%(levelname)s (asctime)s  ansible_api_v2.py ansible_api_v2  run playbook failed: 'unicode' object does not support item assignment
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-22 09:41:51
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-22 11:32:24
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-22 14:17:21
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-22 15:49:09
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-22 15:49:09
+%(levelname)s (asctime)s  ansible_api_v2.py ansible_api_v2  run playbook failed: 'NoneType' object has no attribute 'startswith'
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-22 16:37:45
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-23 09:48:54
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-23 10:09:53
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-26 13:51:15
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-27 09:32:47
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-27 09:32:47
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-27 11:33:33
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-27 14:18:57
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-27 14:35:11
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-28 09:28:20
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-28 14:31:26
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-28 14:31:26
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-28 15:50:40
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-28 15:50:40
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-28 15:50:40
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-29 09:34:38
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-29 10:42:57
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-29 10:42:57
+%(levelname)s (asctime)s  ansible_api_v2.py ansible_api_v2  run model failed: the field 'hosts' should be a list of (<type 'basestring'>,), but the item 'None' is a <type 'NoneType'>
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-30 10:30:41
+%(levelname)s (asctime)s  user.py user  you are login... 2018-11-30 10:55:24

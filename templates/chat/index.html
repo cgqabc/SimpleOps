@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Chat Rooms</title>
+</head>
+<body>
+    What chat room would you like to enter?<br/>
+    <input id="room-name-input" type="text" size="100"/><br/>
+    <input id="room-name-submit" type="button" value="Enter"/><br/><br/>
+    Ajax test!!!!!!!<br/>
+    <textarea id="ajax-log" cols="100" rows="20">ajax recvice data</textarea><br/>
+    <input id="ajax-get-submit" type="button" value="GET"/><br/>
+    <input id="ajax-input" type="text" size="100"/><br/>
+    <input id="ajax-post-submit" type="button" value="POST"/>
+</body>
+    <script src="/static/js/jquery-1.11.1.min.js"></script>
+    <script src="/static/js/csrf.js"></script>
+
+<script>
+    document.querySelector('#room-name-input').focus();
+    document.querySelector('#room-name-input').onkeyup = function(e) {
+        if (e.keyCode === 13) {  // enter, return
+            document.querySelector('#room-name-submit').click();
+        }
+    };
+
+    document.querySelector('#room-name-submit').onclick = function(e) {
+        var roomName = document.querySelector('#room-name-input').value;
+        window.location.pathname = '/chat/' + roomName + '/';
+    };
+</script>
+<script>
+    $('#ajax-get-submit').click(function(){
+        $.ajax({
+            dataType: "JSON",
+            url: '/chat/ajax/', //请求地址
+            type: "GET",  //提交类似
+            success: function (response) {
+                document.getElementById("ajax-log").innerHTML=response['data'];
+            },
+            error: function () {
+                alert("ajax get error!!");//获取抛出的错误信息
+                },
+        })})
+</script>
+
+<script>
+
+{#        $.ajaxSetup({   //解决跨站脚本问题,未生效，改成引用 /static/js/csrf.js #}
+{#    data: {csrfmiddlewaretoken: '{{ csrf_token }}' },#}
+{#});#}
+
+
+    $('#ajax-post-submit').click(function(){
+    var  ajdata=document.querySelector('#ajax-input').value;
+    console.log(ajdata);
+        $.ajax({
+            dataType: "JSON",
+            url: '/chat/ajax/', //请求地址
+            type: "POST",  //提交类似
+            data: {"ajdata":ajdata},
+            success: function (response) {
+                console.log('get ok!')
+                document.getElementById("ajax-log").innerHTML=response["data"];
+            },
+            error: function () {
+                alert("ajax get error!!");//获取抛出的错误信息
+                }
+        })})
+</script>
+</html>

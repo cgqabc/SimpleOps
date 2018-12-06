@@ -1,0 +1,471 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    <title> ALANCMDB-运行脚本 </title>
+{% endblock %}
+
+
+{% block css-js %}
+    <!--Ion Icons [ OPTIONAL ]-->
+    <link href="/static/css/ionicons.min.css" rel="stylesheet">
+    <script src="/static/js/layer/layer.js"></script>
+    <!--Nifty Premium Icon [ DEMONSTRATION ]-->
+    <link href="/static/css/nifty-demo-icons.min.css" rel="stylesheet">
+
+    <script src="/static/js/ace/ace.js"></script>
+    <script src="/static/js/ace/ext-language_tools.js"></script>
+    <script src="/static/js/ace/theme-monokai.js"></script>
+    <link href="/static/css/fileinput.css" media="all" rel="stylesheet" type="text/css"/>
+    <script src="/static/js/fileinput.js" type="text/javascript"></script>
+    <script src="/static/js/echarts.js" type="text/javascript"></script>
+    <style type="text/css">
+        pre {
+            overflow: auto;
+            white-space: normal;
+            white-space: pre-wrap; /* css-3 */
+            white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+            white-space: -pre-wrap; /* Opera 4-6 */
+            white-space: -o-pre-wrap; /* Opera 7 */
+            word-wrap: break-word; /* Internet Explorer 5.5+ */
+            border: 1px solid #ccc;
+            padding: 5px;
+            margin: 10px;
+            font-family: Consolas, monospace;
+            color: #ADFF2F;
+            background-color: #000000;
+        }
+
+        .dropdown-menu {
+            max-height: 500px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .html {
+            font-size: 13px;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+    </style>
+
+    <style type="text/css">
+        #compile-editor {
+            /* position: absolute; */
+            width: 100%;
+            height: 300px;
+        }
+    </style>
+{% endblock %}
+
+
+{% block page-title %}
+    <h1 class="page-header text-overflow">Run Scripts</h1>
+{% endblock %}
+
+{% block content %}
+
+        <!--Breadcrumb-->
+                <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                <ol class="breadcrumb">
+					<li><a href="/">首页</a></li>
+					<li><a href="/deploy/">应用部署</a></li>
+                    <li><a href="/deploy/playbook_list/">剧本列表</a></li>
+					<li class="active">剧本执行</li>
+                </ol>
+                <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                <!--End breadcrumb-->
+    {% if message %}
+        <div class="alert alert-warning">{{ message }}</div>
+    {% endif %}
+
+    <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">剧本执行</h3>
+        </div>
+        <div class="panel-body">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#home" data-toggle="tab"><i class="fa fa-rocket  "></i>执行页面</a>
+                </li>
+                <li><a href="#profile" data-toggle="tab"><i class="fa fa-bar-chart-o"></i>汇总展示</a>
+                </li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="home">
+                    <br>
+                    <br>
+                    <div class="row">
+                        <form class="form-horizontal" id="ansible_moudel_form" role="form"
+                              method="POST" enctype="multipart/form-data">
+                            <div class="col-lg-4">
+                                <legend><i class="fa  fa-paper-plane-o"></i> 剧本选项</legend>
+
+                                {% csrf_token %}
+                                {#            {{ form }}#}
+                                {% for item in form %}
+                                    <div class="form-group">
+                                        <label class="col-ms-10 control-label"
+                                               style="margin-left: 10px;">{{ item.label }}</label>
+
+                                        <div class="col-ms-10" style="margin-left: 10px;">
+                                            {{ item }}
+
+                                        </div>
+
+                                        <div class="col-ms-10" style="margin-left: 10px;">
+                                            {{ item.errors }}
+                                        </div>
+                                    </div>
+
+                                {% endfor %}
+                                <input type="hidden" name="uuidkey" value="{{ uuidkey }}">
+                                <div class="form-group">
+                                    <div class="box-footer" style="margin-left: 10px;width: 530px;">
+                                        <button type="button" class="btn btn-primary" style="width: 60pt"
+                                                id="run_ansible_model" onclick="runAnsibleModel(this)"
+                                        >运行
+                                        </button>
+                                        <button type="button" style="width: 60pt" onclick="saveAnsibleScript(this)"
+                                                class="btn btn-default">保存
+                                        </button>
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="col-lg-8">
+                                <legend><i class="fa  fa-paper-plane-o"></i> 上传文件(二选一)</legend>
+                                <div class="form-group">
+                                    <div class="col-ms-10" style="margin-left: 10px;">
+                                        <input type="file" name="playbook_file_upload"
+                                               id="playbook_file_upload">
+                                    </div>
+                                </div>
+                                <legend><i class="fa  fa-paper-plane-o"></i> 在线编辑(二选一)</legend>
+                                <div class="form-group">
+                                    <label class="col-ms-10 control-label"
+                                           style="margin-left: 20px;">语言类型: </label>
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" class="btn btn-default" onclick="setAceEditMode()">
+                                            <a>yaml</a></button>
+
+                                    </div>
+
+                                </div>
+                                <div id="compile-editor" class="ace_editor">{{ contents }}</div>
+                                <br>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+                <div class="tab-pane fade" id="profile">
+                    <br>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">状态比率</h3>
+                                </div>
+                                <!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div class="table-responsive">
+                                        <div id="statPer" style="width: 600px;height:400px;">
+                                        </div>
+                                    </div>
+                                    <!-- /.table-responsive -->
+                                </div>
+                                <!-- /.panel-body -->
+                            </div>
+                            <!-- /.panel -->
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">事件汇总</h3>
+                                </div>
+                                <!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div class="table-responsive">
+                                        <div id="summary">
+                                        </div>
+                                    </div>
+                                    <!-- /.table-responsive -->
+                                </div>
+                                <!-- /.panel-body -->
+                            </div>
+                            <!-- /.panel -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- /.panel-body -->
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <legend><i class="fa  fa-paper-plane-o"></i> 执行结果</legend>
+                <pre class="html">
+                                        <div id="result"></div>
+				                    </pre>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <script>
+
+
+        function setAceEditMode() {
+            var editor = ace.edit("compile-editor");
+            require("ace/ext/old_ie");
+            var langTools = ace.require("ace/ext/language_tools");
+            editor.removeLines();
+            editor.setTheme("ace/theme/monokai");
+
+            editor.getSession().setMode("ace/mode/yaml");
+            editor.setShowPrintMargin(false);
+            editor.setOptions({
+                enableBasicAutocompletion: true,
+                enableSnippets: true,
+                enableLiveAutocompletion: true
+            });
+
+        };
+
+        setAceEditMode();
+
+        function saveAnsibleScript(obj) {
+            var btnObj = $(obj);
+            btnObj.attr('disabled', true);
+            {#var form = document.getElementById('ansible_moudel_form');#}
+            var editor = ace.edit("compile-editor");
+            var contents = editor.getSession().getValue();
+            var script_name = document.getElementById("id_name").value;
+            var files = document.getElementById("playbook_file_upload").value;
+            if (contents.length == 0 && script_name.length == 0 || files.length == 0) {
+                window.wxc.xcConfirm("脚本内容与名称不能为空", window.wxc.xcConfirm.typeEnum.error);
+                btnObj.removeAttr('disabled');
+                return false;
+            }
+            ;
+            var ansible_server = new Array();
+            $("#ansible_server option:selected").each(function () {
+                ansible_server.push($(this).val());
+            });
+            var form = new FormData(document.getElementById('ansible_moudel_form'));
+            form.append('playbook_file', contents);
+            form.append('type', 'save');
+            $.ajax({
+                url: '/deploy/playbook_add/', //请求地址
+                type: "POST",  //提交类似
+                {#data: $('#ansible_moudel_form').serialize() + '&playbook_file=' + contents + '&type=save',#}
+                data: form,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    btnObj.removeAttr('disabled');
+                    if (response["code"] == "500") {
+                        window.wxc.xcConfirm(response["msg"], window.wxc.xcConfirm.typeEnum.error);
+                    }
+                    else {
+                        window.wxc.xcConfirm(response["msg"], window.wxc.xcConfirm.typeEnum.success);
+                    }
+
+                },
+                error: function (response) {
+                    btnObj.removeAttr('disabled');
+                    window.wxc.xcConfirm("运行失败", window.wxc.xcConfirm.typeEnum.error);
+                }
+            })
+        }
+
+
+        function runAnsibleModel(obj) {
+            var btnObj = $(obj);
+            btnObj.attr('disabled', true);
+            {#var form = document.getElementById('ansible_moudel_form');#}
+            var editor = ace.edit("compile-editor");
+            var contents = editor.getSession().getValue();
+            var files = document.getElementById("playbook_file_upload").value;
+            if (contents.length == 0 && files.length == 0) {
+                window.wxc.xcConfirm("脚本内容不能为空", window.wxc.xcConfirm.typeEnum.error);
+                btnObj.removeAttr('disabled');
+                return false;
+            }
+            ;
+            $("#result").html("服务器正在处理，请稍等。。。");
+            var ansible_server = new Array();
+            $("#ansible_server option:selected").each(function () {
+                ansible_server.push($(this).val());
+            });
+            /* 轮训获取结果 开始  */
+            var interval = setInterval(function () {
+                $.ajax({
+                    url: '/deploy/run_result/',
+                    type: 'post',
+                    data: $('#ansible_moudel_form').serialize(),
+                    success: function (result) {
+                        if (result["msg"] !== null) {
+                            $("#result").append("<p>" + result["msg"] + "</p>");
+                            {#document.getElementById("scrollToTop").scrollIntoView();#}
+                            if (result["msg"].indexOf("[Done]") == 0) {
+                                clearInterval(interval);
+                                window.wxc.xcConfirm("Ansible执行完成", window.wxc.xcConfirm.typeEnum.success);
+                                btnObj.removeAttr('disabled');
+                            }
+                        }
+                    },
+                    error: function (response) {
+                        btnObj.removeAttr('disabled');
+                        clearInterval(interval);
+                    }
+                });
+            }, 1000);
+// 	    /* 轮训获取结果结束  */
+
+            var form = new FormData(document.getElementById('ansible_moudel_form'));
+            form.append('playbook_file', contents);
+            form.append('type', 'run');
+            $.ajax({
+                url: '/deploy/playbook_add/', //请求地址
+                type: "POST",  //提交类似
+                {#data: $('#ansible_moudel_form').serialize() + '&playbook_file=' + contents + '&type=run',#}
+                data: form,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    btnObj.removeAttr('disabled');
+                    if (response["code"] == "500") {
+                        clearInterval(interval);
+                        btnObj.removeAttr('disabled');
+                        window.wxc.xcConfirm(response["msg"], window.wxc.xcConfirm.typeEnum.error);
+                    }
+
+                else
+                    if (response["code"] == "200") {
+                        var htmlStr = '<table class="table"><thead><th>主机</th><th>成功</th><th>失败</th><th>跳过</th><th>更改</th><th>主机不可达</th><th>结果</th></thead><tbody>';
+                        for (x in response["data"]) {
+                            if (response["data"][x]['result'] == 'Succeed') {
+                                var btTag = '<button type="button" class="btn btn-outline btn-success disabled">成功</button>'
+                            }
+                            else {
+                                var btTag = '<button type="button" class="btn btn-outline btn-danger disabled">失败</button>'
+                            }
+                            ;
+                            htmlStr += '<tr><td>' + response["data"][x]['host'] +
+                                '</td><td><span class="label label-success">' + response["data"][x]['ok'] + '</span>' +
+                                '</td><td><span class="label label-danger">' + response["data"][x]['failed'] + '</span>' +
+                                '</td><td><span class="label label-default">' + response["data"][x]['skipped'] + '</span>' +
+                                '</td><td><span class="label label-warning">' + response["data"][x]['changed'] + '</span>' +
+                                '</td><td><span class="label label-info">' + response["data"][x]['unreachable'] + '</span>' +
+                                '</td><td>' + btTag + '</tr>';
+                        }
+                        ;
+                        htmlStr += '</tbody></table>'
+                        $('#summary').html(htmlStr);
+                        runAnsibleStatusPer(response["statPer"]);
+                    };
+                },
+                error: function (response) {
+                    btnObj.removeAttr('disabled');
+                    window.wxc.xcConfirm("运行失败", window.wxc.xcConfirm.typeEnum.error);
+                    clearInterval(interval);
+                }
+            })
+        };
+
+        var myChart = echarts.init(document.getElementById('statPer'));
+	    function runAnsibleStatusPer(statPer) {
+	    option = {
+	    	    title : {
+	    	        text: '剧本部署状态比率',
+	    	        subtext: 'Task Status',
+	    	        x:'center'
+	    	    },
+	    	    tooltip : {
+	    	        trigger: 'item',
+	    	        formatter: "{a} <br/>{b} : {c} ({d}%)"
+	    	    },
+	    	    legend: {
+	    	        orient : 'vertical',
+	    	        x : 'left',
+	    	        data:['成功','失败','更改','跳过','主机不可达']
+	    	    },
+	    	    toolbox: {
+	    	        show : true,
+	    	        feature : {
+	    	            mark : {show: true},
+	    	            dataView : {show: true, readOnly: false},
+	    	            magicType : {
+	    	                show: true,
+	    	                type: ['pie', 'funnel'],
+	    	                option: {
+	    	                    funnel: {
+	    	                        x: '25%',
+	    	                        width: '50%',
+	    	                        funnelAlign: 'left',
+	    	                        max: 1548
+	    	                    }
+	    	                }
+	    	            },
+	    	            restore : {show: true},
+	    	            saveAsImage : {show: true}
+	    	        }
+	    	    },
+	    	    calculable : true,
+	    	    series : [
+	    	        {
+	    	            name:'Task Status Per',
+	    	            type:'pie',
+	    	            radius : '55%',
+	    	            center: ['50%', '60%'],
+	    	            data:[
+	    	                {value:statPer["ok"], name:'成功'},
+	    	                {value:statPer["failed"], name:'失败'},
+	    	                {value:statPer["changed"], name:'更改'},
+	    	                {value:statPer["skipped"], name:'跳过'},
+	    	                {value:statPer["unreachable"], name:'主机不可达'}
+	    	            ]
+	    	        }
+	    	    ]
+	    	};
+
+	 myChart.setOption(option);
+	};
+
+        {#function repealFromVaule() {#}
+        {#    document.getElementById("deployRun").reset();}#}
+
+
+        $("#playbook_file_upload").fileinput({
+            language: 'zh',
+            showUpload: false,
+            uploadUrl: '#', // you must set a valid URL here else you will get an error
+            allowedFileExtensions: [".yml", ".yaml"],
+            previewFileType: "pdf",
+            allowedFileTypes: ["text"],
+            overwriteInitial: false,
+            maxFileSize: 2000,
+            maxFilesNum: 10,
+            dropZoneEnabled: false,
+            slugCallback: function (filename) {
+                return filename.replace('(', '_').replace(']', '_');
+            }
+        });
+    </script>
+    {% if errorInfo %}
+        window.wxc.xcConfirm("{{ errorInfo }}", window.wxc.xcConfirm.typeEnum.error);
+    {% endif %}
+
+{% endblock %}

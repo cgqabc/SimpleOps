@@ -1,0 +1,626 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% block title %}
+    {% endblock %}
+
+<!--STYLESHEET-->
+    <!--=================================================-->
+    <link rel="icon" href="/static/favicon.ico">
+    <!--Open Sans Font [ OPTIONAL ]-->
+    <link href='/static/css/26707bedc25a4344bb99d7e1215825f4.css' rel='stylesheet' type='text/css'>
+    <!--Demo [ DEMONSTRATION ]-->
+{#    <link href="/static/css/nifty-demo.min.css" rel="stylesheet">#}
+
+    <!--Bootstrap Stylesheet [ REQUIRED ]-->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--Nifty Premium Icon [ DEMONSTRATION ]-->
+    <link href="/static/css/nifty-demo-icons.min.css" rel="stylesheet">
+
+    <!--Nifty Stylesheet [ REQUIRED ]-->
+    <link href="/static/css/nifty.min.css" rel="stylesheet">
+
+{#    <link rel="stylesheet"  href="/static/css/xcConfirm.css" />#}
+
+<!-- Multiselect CSS -->
+<link rel="stylesheet" href="/static/css/bootstrap-select.css"
+	type="text/css" />
+
+
+    <!--JAVASCRIPT-->
+    <!--=================================================-->
+
+    <!--jQuery [ REQUIRED ]-->
+    <script src="/static/js/jquery-2.2.4.min.js"></script>
+
+
+    <!--BootstrapJS [ RECOMMENDED ]-->
+    <script src="/static/js/bootstrap.min.js"></script>
+<!-- Multiselect JavaScript -->
+    <script src="/static/js/bootstrap-select.js"></script>
+
+    <!--NiftyJS [ RECOMMENDED ]-->
+    <script src="/static/js/nifty.min.js"></script>
+
+    <!--Themify Icons [ OPTIONAL ]-->
+    <link href="/static/css/themify-icons.min.css" rel="stylesheet">
+
+    <!--Icons [ SAMPLE ]-->
+{#    <script src="/static/js/iconss.js"></script>#}
+
+{#    <!--Pace - Page Load Progress Par [OPTIONAL]-->#}
+{#    <link href="/static/css/pace.min.css" rel="stylesheet">#}
+{#    <script src="/static/js/pace.min.js"></script>#}
+
+<!--    弹窗开始样式 -->
+<script src="/static/js/xcConfirm.js" type="text/javascript" 	charset="utf-8"></script>
+<link rel="stylesheet" 	href="/static/css/xcConfirm.css" />
+<!--   csrf -->
+<script src="/static/js/csrf.js"></script>
+
+   <style type="text/css">
+	pre {
+		overflow: auto;
+		white-space: normal;
+		white-space: pre-wrap; /* css-3 */
+		white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+		white-space: -pre-wrap; /* Opera 4-6 */
+		white-space: -o-pre-wrap; /* Opera 7 */
+		word-wrap: break-word; /* Internet Explorer 5.5+ */
+		border: 1px solid #ccc;
+		padding: 5px;
+		margin: 10px;
+		font-family: Consolas, monospace;
+		color: #ADFF2F;
+		background-color: #000000;
+	}
+  .dropdown-menu {
+		max-height: 500px;
+		overflow-y: auto;
+		overflow-x: hidden;
+  }
+  .html {
+  font-size: 13px;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+</style>
+
+
+    {% block css-js %}
+    {% endblock %}
+
+
+
+
+
+
+</head>
+
+<!--TIPS-->
+<!--You may remove all ID or Class names which contain "demo-", they are only used for demonstration. -->
+<body>
+<div id="container" class="effect aside-float aside-bright mainnav-lg">
+
+    <!--NAVBAR-->
+    <!--===================================================-->
+    <header id="navbar">
+        <div id="navbar-container" class="boxed">
+
+            <!--Brand logo & name-->
+            <!--================================-->
+            <div class="navbar-header">
+                <a href={% url 'index' %} class="navbar-brand">
+                    <img src="/static/picture/logo.png" alt="Nifty Logo" class="brand-icon">
+                    <div class="brand-title">
+                        <span class="brand-text">SimpleOps</span>
+                    </div>
+                </a>
+            </div>
+            <!--================================-->
+            <!--End brand logo & name-->
+
+
+            <!--Navbar Dropdown-->
+            <!--================================-->
+            <div class="navbar-content clearfix">
+                <ul class="nav navbar-top-links pull-left">
+
+                    <!--Navigation toogle button-->
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <li class="tgl-menu-btn">
+                        <a class="mainnav-toggle" href="#">
+                            <i class="demo-pli-view-list"></i>
+                        </a>
+                    </li>
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <!--End Navigation toogle button-->
+
+
+                    <!--Notification dropdown-->
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <li class="dropdown">
+                        <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                            <i class="demo-pli-bell"></i>
+                            <span class="badge badge-header badge-danger"></span>
+                        </a>
+
+                        <!--Notification dropdown menu-->
+                        <div class="dropdown-menu dropdown-menu-md">
+                            <div class="pad-all bord-btm">
+                                <p class="text-semibold text-main mar-no">You have  notifications.</p>
+                            </div>
+                            <div class="nano scrollable">
+                                <div class="nano-content">
+                                    <ul class="head-list">
+
+                                        <!-- Dropdown list-->
+                                        <li>
+                                            <a href="#">
+                                                <div class="clearfix">
+                                                    <p class="pull-left">Database Repair</p>
+                                                    <p class="pull-right">70%</p>
+                                                </div>
+                                                <div class="progress progress-sm">
+                                                    <div style="width: 70%;" class="progress-bar">
+                                                        <span class="sr-only">70% Complete</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+
+
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!--Dropdown footer-->
+                            <div class="pad-all bord-top">
+                                <a href="#" class="btn-link text-dark box-block">
+                                    <i class="fa fa-angle-right fa-lg pull-right"></i>Show All Notifications
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <!--End notifications dropdown-->
+
+
+                    <!--Mega dropdown-->
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <li class="mega-dropdown">
+                        <a href="#" class="mega-dropdown-toggle">
+                            <i class="ti-map"></i>
+                        </a>
+                        <div class="dropdown-menu mega-dropdown-menu">
+                            <div class="row">
+                                <div class="col-sm-4 col-md-2">
+
+                                    <!--Mega menu list-->
+                                    <ul class="list-unstyled">
+                                        <li class="dropdown-header"><i class="ti-user"></i> 用户管理</li>
+                                                                                <li><a href={% url 'user_list' %}>用户列表</a></li>
+                                        <li><a href={% url 'role_list' %}>角色管理</a></li>
+                                        <li><a href={% url 'permission_list' %}>权限管理</a>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                                <div class="col-sm-4 col-md-2">
+
+                                    <!--Mega menu list-->
+                                    <ul class="list-unstyled">
+                                        <li class="dropdown-header"><i class="ti-server"></i> CBDB</li>
+                                        <li><a href={% url 'cmdb:assets_info' %}>资产管理</a></li>
+                                        <li><a href={% url 'cmdb:new_asset_permission' %}>资产审批</a>
+                                        <li><a href={% url 'cmdb:business_unit' %}>业务线管理</a></li>
+                                        <li><a href={% url 'cmdb:project_list' %}>项目管理</a>
+                                    </ul>
+
+                                </div>
+                                <div class="col-sm-4 col-md-2">
+
+                                    <!--Mega menu list-->
+                                    <ul class="list-unstyled">
+                                        <li class="dropdown-header"><i class="ti-comments"></i> 任务系统</li>
+                                        <li><a href="/setup_jobs/">计划任务</a></li>
+                                        <li><a href="/setup_jobs/task_result/">任务结果</a></li>
+
+                                    </ul>
+
+                                </div>
+                                <div class="col-sm-4 col-md-2">
+
+                                    <!--Mega menu list-->
+                                    <ul class="list-unstyled">
+                                        <li class="dropdown-header"><i class="ti-bolt"></i> 应用部署</li>
+                                        <li><a href="/deploy/">动态资产管理</a></li>
+                                        <li><a href="/deploy/moudel/">模块运行</a></li>
+                                        <li><a href="/deploy/scripts_list/">脚本运行</a></li>
+                                        <li><a href="/deploy/playbook_list/">palybook运行</a></li>
+                                        <li><a href="/deploy/ansible_log/">运行结果</a></li>
+                                    </ul>
+
+                                </div>
+                                <div class="col-sm-4 col-md-2">
+
+                                    <!--Mega menu list-->
+                                    <ul class="list-unstyled">
+                                        <li class="dropdown-header">
+                                            <i class="ti-package"></i> 代码发布</li>
+                                        <li><a href="/delivery/add/">项目配置</a></li>
+                                        <li><a href="/delivery/list/">项目列表</a></li>
+                                        <li><a href="/delivery/log/">操作日志</a></li>
+                                    </ul>
+
+                                </div>
+                                <div class="col-sm-4 col-md-2">
+
+                                    <!--Mega menu list-->
+                                    <ul class="list-unstyled">
+                                        <li class="dropdown-header"><i class="ti-bag"></i> 文件管理</li>
+                                        <li><a href="/mfile/">我的文件</a></li>
+                                        <li><a href="/mfile/up/">文件分发</a></li>
+                                        <li><a href="/mfile/down/">文件下载</a></li>
+                                        <li><a href="/mfile/log/">文件操作日志</a></li>
+
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <!--End mega dropdown-->
+
+                </ul>
+                <ul class="nav navbar-top-links pull-right">
+
+
+                    <!--User dropdown-->
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <li id="dropdown-user" class="dropdown">
+                        <a href="#" data-toggle="dropdown" class="dropdown-toggle text-right">
+                                <span class="pull-right">
+                                    <!--<img class="img-circle img-user media-object" src="picture/1.png" alt="Profile Picture">-->
+                                    <i class="demo-pli-male ic-user"></i>
+                                </span>
+                            <div class="username hidden-xs">{{ request.user.username }}</div>
+                        </a>
+
+
+                        <div class="dropdown-menu dropdown-menu-md dropdown-menu-right panel-default">
+
+
+
+
+                            <!-- User dropdown menu -->
+                            <ul class="head-list">
+                                <li>
+                                    <a href="#">
+                                        <i class="demo-pli-male icon-lg icon-fw"></i> 个人中心
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span class="badge badge-danger pull-right">1</span>
+                                        <i class="demo-pli-mail icon-lg icon-fw"></i> 信息
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span class="label label-success pull-right">New</span>
+                                        <i class="demo-pli-gear icon-lg icon-fw"></i> 设置
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href={% url "change_password" %}>
+                                        <i class="demo-pli-information icon-lg icon-fw"></i> 修改密码
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <i class="demo-pli-computer-secure icon-lg icon-fw"></i> 锁屏
+                                    </a>
+                                </li>
+                            </ul>
+
+                            <!-- Dropdown footer -->
+                            <div class="pad-all text-right">
+                                <a href={% url "logout" %}>
+                                    <i class="demo-pli-unlock"></i> 注销
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <!--End user dropdown-->
+
+
+                </ul>
+            </div>
+            <!--================================-->
+            <!--End Navbar Dropdown-->
+
+        </div>
+    </header>
+    <!--===================================================-->
+    <!--END NAVBAR-->
+
+    <div class="boxed">
+
+        <!--CONTENT CONTAINER-->
+        <!--===================================================-->
+        <div id="content-container">
+
+            <!--Page Title-->
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <div id="page-title">
+                {% block page-title %}
+                {% endblock %}
+
+                <!--Searchbox-->
+{#                <div class="searchbox">#}
+{#                    <div class="input-group custom-search-form">#}
+{#                        <input type="text" class="form-control" placeholder="Search..">#}
+{#                        <span class="input-group-btn">#}
+{#                                <button class="text-muted" type="button"><i class="demo-pli-magnifi-glass"></i></button>#}
+{#                            </span>#}
+{#                    </div>#}
+{#                </div>#}
+            </div>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <!--End page title-->
+
+            <!--Page content-->
+            <!--===================================================-->
+        <div id="page-content">
+            {% block content %}
+            {% endblock %}
+            <!--===================================================-->
+            <!--End page content-->
+        </div>
+
+        </div>
+        <!--===================================================-->
+        <!--END CONTENT CONTAINER-->
+
+
+
+
+        <!--MAIN NAVIGATION-->
+        <!--===================================================-->
+        <nav id="mainnav-container">
+            <div id="mainnav">
+
+                <!--Menu-->
+                <!--================================-->
+                <div id="mainnav-menu-wrap">
+                    <div class="nano">
+                        <div class="nano-content">
+
+
+                            <ul id="mainnav-menu" class="list-group">
+
+                                <!--Category name-->
+                                <li class="list-header">主界面</li>
+
+                                <!--Menu list item-->
+                                <li class="active-link">
+                                    <a href={% url 'index' %}>
+                                        <i class="demo-psi-home"></i>
+                                        <span class="menu-title">
+												<strong>仪表盘</strong>
+											</span>
+                                    </a>
+                                </li>
+
+                                <!--Menu list item-->
+                                <li>
+                                    <a href="#">
+                                        <i class="ti-server"></i>
+                                        <span class="menu-title">
+												<strong>CMDB</strong>
+											</span>
+                                        <i class="arrow"></i>
+                                    </a>
+
+                                    <!--Submenu-->
+                                    <ul class="collapse">
+                                        <li><a href={% url 'cmdb:assets_info' %}>资产管理</a></li>
+                                        <li><a href={% url 'cmdb:new_asset_permission' %}>资产审批</a>
+                                        <li><a href={% url 'cmdb:business_unit' %}>业务线管理</a></li>
+                                        <li><a href={% url 'cmdb:project_list' %}>项目管理</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li>
+                                    <a href="#">
+                                        <i class="ti-user"></i>
+                                        <span class="menu-title">
+												<strong>用户管理</strong>
+											</span>
+                                        <i class="arrow"></i>
+                                    </a>
+
+                                    <!--Submenu-->
+                                    <ul class="collapse">
+                                        <li><a href={% url 'user_list' %}>用户列表</a></li>
+                                        <li><a href={% url 'role_list' %}>角色管理</a></li>
+                                        <li><a href={% url 'permission_list' %}>权限管理</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+
+                                <!--Menu list item-->
+                                <li>
+                                    <a href="/config/">
+                                        <i class="demo-psi-gear-2"></i>
+                                        <span class="menu-title">
+												<strong>全局配置</strong>
+
+											</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/admin/">
+                                        <i class="demo-psi-gear-2"></i>
+                                        <span class="menu-title">
+												<strong>系统后台</strong>
+
+											</span>
+                                    </a>
+                                </li>
+
+                                <li class="list-divider"></li>
+
+                                <!--Category name-->
+                                <li class="list-header">扩展功能</li>
+
+                                <!--Menu list item-->
+                                <li>
+                                    <a href="#">
+                                        <i class="ti-comments"></i>
+                                        <span class="menu-title">任务系统</span>
+                                        <i class="arrow"></i>
+                                    </a>
+
+                                    <!--Submenu-->
+                                    <ul class="collapse">
+                                        <li><a href="/setup_jobs/">计划任务</a></li>
+                                        <li><a href="/setup_jobs/task_result/">任务结果</a></li>
+
+
+
+                                    </ul>
+                                </li>
+
+                                <!--Menu list item-->
+                                <li>
+                                    <a href="#">
+                                        <i class="ti-bolt"></i>
+                                        <span class="menu-title">应用部署</span>
+                                        <i class="arrow"></i>
+                                    </a>
+
+                                    <!--Submenu-->
+                                    <ul class="collapse">
+                                        <li><a href="/deploy/">动态资产管理</a></li>
+                                        <li><a href="/deploy/moudel/">模块运行</a></li>
+                                        <li><a href="/deploy/scripts_list/">脚本运行</a></li>
+                                        <li><a href="/deploy/playbook_list/">palybook运行</a></li>
+                                        <li><a href="/deploy/ansible_log/">运行结果</a></li>
+
+                                    </ul>
+                                </li>
+
+                                <!--Menu list item-->
+                                <li>
+                                    <a href="#">
+                                        <i class="ti-bag"></i>
+                                        <span class="menu-title">文件管理</span>
+                                        <i class="arrow"></i>
+                                    </a>
+
+                                    <!--Submenu-->
+                                    <ul class="collapse">
+                                        <li><a href="/mfile/">我的文件</a></li>
+                                        <li><a href="/mfile/up/">文件分发</a></li>
+                                        <li><a href="/mfile/down/">文件下载</a></li>
+                                        <li><a href="/mfile/log/">文件操作日志</a></li>
+
+
+                                    </ul>
+                                </li>
+
+                                <!--Menu list item-->
+                                <li>
+                                    <a href="#">
+                                        <i class="ti-package"></i>
+                                        <span class="menu-title">代码发布</span>
+                                         <i class="arrow"></i>
+                                    </a>
+                                    <!--Submenu-->
+                                    <ul class="collapse">
+
+                                        <li><a href="/delivery/add/">项目配置</a></li>
+                                        <li><a href="/delivery/list/">项目列表</a></li>
+                                        <li><a href="/delivery/log/">操作日志</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+                <!--================================-->
+                <!--End menu-->
+
+            </div>
+        </nav>
+        <!--===================================================-->
+        <!--END MAIN NAVIGATION-->
+
+    </div>
+
+
+    <!-- FOOTER -->
+    <!--===================================================-->
+    <footer id="footer">
+
+        <!-- Visible when footer positions are fixed -->
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <div class="show-fixed pull-right">
+            You have <a href="#" class="text-bold text-main"><span class="label label-danger">3</span> pending
+            action.</a>
+        </div>
+
+
+        <!-- Visible when footer positions are static -->
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <div class="hide-fixed pull-right pad-rgt">
+            Debug version.
+        </div>
+
+
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <!-- Remove the class "show-fixed" and "hide-fixed" to make the content always appears. -->
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+        <p class="pad-lft">&#0169; 2018 SimpleOps</p>
+
+
+    </footer>
+    <!--===================================================-->
+    <!-- END FOOTER -->
+
+
+    <!-- SCROLL PAGE BUTTON -->
+    <!--===================================================-->
+    <button class="scroll-top btn">
+        <i class="pci-chevron chevron-up"></i>
+    </button>
+    <!--===================================================-->
+
+
+</div>
+<!--===================================================-->
+<!-- END OF CONTAINER -->
+
+
+
+
+
+</body>
+</html>

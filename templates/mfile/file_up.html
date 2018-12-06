@@ -1,0 +1,268 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    <title> ALANCMDB-文件分发 </title>
+{% endblock %}
+
+
+{% block css-js %}
+    <!--Ion Icons [ OPTIONAL ]-->
+    <link href="/static/css/ionicons.min.css" rel="stylesheet">
+    <script src="/static/js/layer/layer.js"></script>
+    <!--Nifty Premium Icon [ DEMONSTRATION ]-->
+    <link href="/static/css/nifty-demo-icons.min.css" rel="stylesheet">
+
+    {#<script src="/static/js/ace/ace.js"></script>#}
+    {#<script src="/static/js/ace/ext-language_tools.js"></script>#}
+    {#<script src="/static/js/ace/theme-monokai.js"></script>#}
+
+    <link href="/static/css/fileinput.css" media="all" rel="stylesheet" type="text/css"/>
+    <script src="/static/js/fileinput.js" type="text/javascript"></script>
+{% endblock %}
+
+
+{% block page-title %}
+    <h1 class="page-header text-overflow">文件分发</h1>
+{% endblock %}
+
+{% block content %}
+    <!--Breadcrumb-->
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <ol class="breadcrumb">
+        <li><a href="/">首页</a></li>
+        <li><a href="/mfile/">文件管理</a></li>
+        <li class="active">文件分发</li>
+    </ol>
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!--End breadcrumb-->
+    {% if message %}
+        <div class="alert alert-warning">{{ message }}</div>
+    {% endif %}
+    <div class="row">
+        <div class="panel">
+            <div class="panel-heading">
+                <h3 class="panel-title">文件分发</h3>
+            </div>
+            <div class="panel-body">
+
+                <div class="col-lg-4">
+                    <legend><i class="fa  fa-paper-plane-o"></i> 文件选项</legend>
+                    <form class="form-horizontal" id="fileup_form" role="form" method="POST"
+                    enctype="multipart/form-data">
+                        {% csrf_token %}
+
+
+                        <div class="form-group">
+                            <label class="col-ms-10 control-label"
+                                   style="margin-left: 10px;">{{ form.inventory.label }}</label>
+
+                            <div class="col-ms-10" style="margin-left: 10px;">
+                                {{ form.inventory }}
+
+                            </div>
+
+                            <div class="col-ms-10" style="margin-left: 10px;">
+                                {{ form.inventory.errors }}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-ms-10 control-label"
+                                   style="margin-left: 10px;">{{ form.filepath.label }}</label>
+
+                            <div class="col-ms-10" style="margin-left: 10px;">
+                                {{ form.filepath }}
+
+                            </div>
+
+                            <div class="col-ms-10" style="margin-left: 10px;">
+                                {{ form.filepath.errors }}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-ms-10 control-label"
+                                   style="margin-left: 10px;">{{ form.owner.label }}</label>
+
+                            <div class="col-ms-10" style="margin-left: 10px;">
+                                {{ form.owner }}
+
+                            </div>
+
+                            <div class="col-ms-10" style="margin-left: 10px;">
+                                {{ form.owner.errors }}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-ms-10 control-label"
+                                   style="margin-left: 10px;">{{ form.permission.label }}</label>
+
+                            <div class="col-ms-10" style="margin-left: 10px;">
+                                {{ form.permission }}
+
+                            </div>
+
+                            <div class="col-ms-10" style="margin-left: 10px;">
+                                {{ form.permission.errors }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-ms-10 control-label"
+                                   style="margin-left: 10px;">{{ form.content.label }}</label>
+
+                            <div class="col-ms-10" style="margin-left: 10px;">
+                                {{ form.content }}
+
+                            </div>
+
+                            <div class="col-ms-10" style="margin-left: 10px;">
+                                {{ form.content.errors }}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-ms-10 control-label"
+                                   style="margin-left: 10px;">上传文件</label>
+
+                            <div class="col-ms-10" style="margin-left: 10px;">
+                                 <input type="file" name="file_upload"
+                                        id="file_upload">
+                            </div>
+
+                        </div>
+
+
+                        <input type="hidden" name="uuidkey" value="{{ uuidkey }}">
+                        <div class="form-group">
+                            <div class="box-footer" style="margin-left: 10px;width: 530px;">
+                                <button type="button" class="btn btn-primary" style="width: 60pt"
+                                        id="run_ansible_model" onclick="runAnsibleModel(this)"
+                                >提交
+                                </button>
+                                <button type="button" style="width: 60pt" onclick="repealFromVaule(this)"
+                                        class="btn btn-default">撤销
+                                </button>
+
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="col-lg-8">
+                    <legend><i class="fa  fa-paper-plane-o"></i> 执行结果</legend>
+                    <pre class="html">
+                                        <div id="result"></div>
+				                    </pre>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="visibility:hidden"><a id="scrollToTop"></a></div>
+
+
+    <script>
+        function runAnsibleModel(obj) {
+            var btnObj = $(obj);
+            btnObj.attr('disabled', true);
+            var form = document.getElementById('fileup_form');
+            var post_data = {};
+            for (var i = 1; i < form.length; ++i) {
+                var name = form[i].name;
+                var value = form[i].value;
+                var project = name.indexOf("ansible_model");
+                if (project == 0 && value.length == 0 && name != "ansible_args") {
+                    window.wxc.xcConfirm("请注意必填项不能为空~", window.wxc.xcConfirm.typeEnum.error);
+                    btnObj.removeAttr('disabled');
+                    return false;
+                }
+            }
+            ;
+            $("#result").html("服务器正在处理，请稍等。。。");
+            /* 轮训获取结果 开始  */
+            var interval = setInterval(function () {
+                $.ajax({
+                    url: '/deploy/run_result/',
+                    type: 'post',
+                    data: $('#fileup_form').serialize(),
+                    {#processData: false, //因为data值是FormData对象，不需要对数据做处理#}
+                    {#data: new FormData($('#ansible_moudel_form')),#}
+                    success: function (result) {
+                        if (result["msg"] !== null) {
+                            $("#result").append("<p>" + result["msg"] + "</p>");
+                            document.getElementById("scrollToTop").scrollIntoView();
+                            if (result["msg"].indexOf("[Done]") == 0) {
+                                clearInterval(interval);
+                                window.wxc.xcConfirm("Ansible执行完成", window.wxc.xcConfirm.typeEnum.success);
+                                btnObj.removeAttr('disabled');
+                            }
+                        }
+                    },
+                    error: function (response) {
+                        btnObj.removeAttr('disabled');
+                        clearInterval(interval);
+                    }
+                });
+            }, 1000); //每1秒轮询一次
+
+// 	    /* 轮训获取结果结束  */
+            var form = new FormData(document.getElementById('fileup_form'));
+            {#form.append('playbook_file', contents);#}
+            {#form.append('type', 'run');#}
+            $.ajax({
+                url: '/mfile/up/', //请求地址
+                type: "POST",  //提交类似
+                data: form,
+                processData: false,
+                contentType: false,
+                {#data: $('#fileup_form').serialize(),  //提交参数#}
+                {#processData: false, //因为data值是FormData对象，不需要对数据做处理#}
+                {#data: new FormData($('#ansible_moudel_form')),#}
+                success: function (response) {
+                    btnObj.removeAttr('disabled');
+                    if (response["code"] == "500") {
+                        clearInterval(interval);
+                        btnObj.removeAttr('disabled');
+                        window.wxc.xcConfirm(response["msg"], window.wxc.xcConfirm.typeEnum.error);
+                    }
+
+                },
+                error: function (response) {
+                    btnObj.removeAttr('disabled');
+                    window.wxc.xcConfirm("运行失败", window.wxc.xcConfirm.typeEnum.error);
+                    clearInterval(interval);
+                }
+            })
+        }
+
+
+        function repealFromVaule() {
+            document.getElementById("deployRun").reset();
+        }
+
+    $("#file_upload").fileinput({
+            language: 'zh',
+            showUpload: false,
+            uploadUrl: '#', // you must set a valid URL here else you will get an error
+            {#allowedFileExtensions: [".yml", ".yaml"],#}
+            previewFileType: "pdf",
+            {#allowedFileTypes: ["text"],#}
+            overwriteInitial: false,
+            maxFileSize: 2000,
+            maxFilesNum: 10,
+            dropZoneEnabled: false,
+            slugCallback: function (filename) {
+                return filename.replace('(', '_').replace(']', '_');
+            }
+        });
+
+
+    {% if errorInfo %}
+        window.wxc.xcConfirm("{{ errorInfo }}", window.wxc.xcConfirm.typeEnum.error);
+    {% endif %}
+
+    </script>
+
+{% endblock %}

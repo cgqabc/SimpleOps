@@ -1,0 +1,267 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    <title> ALANCMDB-新增任务 </title>
+{% endblock %}
+
+
+{% block css-js %}
+    <!--Ion Icons [ OPTIONAL ]-->
+    <link href="/static/css/ionicons.min.css" rel="stylesheet">
+    <script src="/static/js/layer/layer.js"></script>
+    <!--Nifty Premium Icon [ DEMONSTRATION ]-->
+    <link href="/static/css/nifty-demo-icons.min.css" rel="stylesheet">
+
+
+
+{% endblock %}
+
+
+{% block page-title %}
+    <h1 class="page-header text-overflow">Create JOb</h1>
+{% endblock %}
+
+{% block content %}
+    {% if message %}
+        <div class="alert alert-warning">{{ message }}</div>
+    {% endif %}
+    <form class="form-horizontal" role="form" action={% url "job_add" %} method="POST">
+        {% csrf_token %}
+        <div class="box-body">
+            {% for item in form %}
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{{ item.label }}</label>
+
+                    <div class="col-ms-10" style="margin-left: 10px;">
+                        {{ item }}
+                        {% if item.label == "Interval" %}
+                            <a class="shortcut-grid" href="#" onclick="return interval_edit()">
+                                <i class="ion-edit"></i>
+                            </a>
+                            <a class="shortcut-grid" href="#" onclick="return interval_add()">
+                                <i class="ion-plus-round"></i>
+                            </a>
+                        {% elif item.label == "Crontab" %}
+                            <a class="shortcut-grid" href="#" onclick="return cron_edit()">
+                                <i class="ion-edit" ></i>
+                            </a>
+                            <a class="shortcut-grid" href="#" onclick="return cron_add()">
+                                <i class="ion-plus-round"></i>
+                            </a>
+                        {% elif item.label == "Solar" %}
+                            <a class="shortcut-grid" href="#" onclick="return solar_edit()">
+                                <i class="ion-edit"></i>
+                            </a>
+                            <a class="shortcut-grid" href="#" onclick="return solar_add()">
+                                <i class="ion-plus-round"></i>
+                            </a>
+                        {% endif %}
+
+
+                    </div>
+
+                    <div class="col-ms-10" style="margin-left: 10px;">
+                        {{ item.errors }}
+                    </div>
+                </div>
+                <input type="hidden" name="id" value="{{ item.id }}">
+                <input id="handle_status" value="" hidden="hidden">
+            {% endfor %}
+            <div class="form-group">
+                <div class="box-footer" style="margin-left: 10px;width: 530px;">
+                    <input type="submit" class="btn btn-primary" style="width: 60pt" value="提交">
+                    <a href="/setup_jobs/">
+                        <li style="width: 60pt" class="btn btn-primary" value="">返回</li>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        function cron_add() {
+            layer.open({
+                type: 2,
+                title: '新增crontab计划',
+                closeBtn: 1,
+                area: ['700px', '550px'],
+                shadeClose: true, //点击遮罩关闭
+                content: ['/setup_jobs/cron_add/'],
+                end: function () {
+                    var handle_status = $("#handle_status").val();
+                    if (handle_status == '1') {
+                        layer.msg('新增成功！', {
+                            icon: 1,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            history.go(0); //刷新页面
+                        });
+                    } else if (handle_status == '2') {
+                        layer.msg('新增失败！', {
+                            icon: 2,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            history.go(0);
+                        });
+                    }
+                }
+            });
+        }
+    </script>
+    <script>
+        function cron_edit() {
+            var n = $("#id_crontab").find("option:selected").attr("value");
+            layer.open({
+                type: 2,
+                title: '计划信息修改',
+                closeBtn: 1,
+                area: ['700px', '550px'],
+                shadeClose: true, //点击遮罩关闭
+                content: ['/setup_jobs/cron_edit/' + n,],
+                end: function () {
+                    var handle_status = $("#handle_status").val();
+                    if (handle_status == '1') {
+                        layer.msg('保存成功！', {
+                            icon: 1,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            history.go(0);
+                        });
+                    } else if (handle_status == '2') {
+                        layer.msg('修改失败！', {
+                            icon: 2,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            history.go(0);
+                        });
+                    }
+                }
+            });
+        }
+    </script>
+
+    <script>
+        function interval_add() {
+            layer.open({
+                type: 2,
+                title: '新增interval计划',
+                closeBtn: 1,
+                area: ['700px', '550px'],
+                shadeClose: true, //点击遮罩关闭
+                content: ['/setup_jobs/interval_add/'],
+                end: function () {
+                    var handle_status = $("#handle_status").val();
+                    if (handle_status == '1') {
+                        layer.msg('新增成功！', {
+                            icon: 1,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            history.go(0); //刷新页面
+                        });
+                    } else if (handle_status == '2') {
+                        layer.msg('新增失败！', {
+                            icon: 2,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            history.go(0);
+                        });
+                    }
+                }
+            });
+        }
+    </script>
+    <script>
+        function interval_edit() {
+            var n = $("#id_interval").find("option:selected").attr("value");
+            layer.open({
+                type: 2,
+                title: '计划信息修改',
+                closeBtn: 1,
+                area: ['700px', '550px'],
+                shadeClose: true, //点击遮罩关闭
+                content: ['/setup_jobs/interval_edit/' + n,],
+                end: function () {
+                    var handle_status = $("#handle_status").val();
+                    if (handle_status == '1') {
+                        layer.msg('保存成功！', {
+                            icon: 1,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            history.go(0);
+                        });
+                    } else if (handle_status == '2') {
+                        layer.msg('修改失败！', {
+                            icon: 2,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            history.go(0);
+                        });
+                    }
+                }
+            });
+        }
+    </script>
+
+    <script>
+        function solar_add() {
+            layer.open({
+                type: 2,
+                title: '新增solar计划',
+                closeBtn: 1,
+                area: ['700px', '550px'],
+                shadeClose: true, //点击遮罩关闭
+                content: ['/setup_jobs/solar_add/'],
+                end: function () {
+                    var handle_status = $("#handle_status").val();
+                    if (handle_status == '1') {
+                        layer.msg('新增成功！', {
+                            icon: 1,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            history.go(0); //刷新页面
+                        });
+                    } else if (handle_status == '2') {
+                        layer.msg('新增失败！', {
+                            icon: 2,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            history.go(0);
+                        });
+                    }
+                }
+            });
+        }
+    </script>
+    <script>
+        function solar_edit() {
+            var n = $("#id_solar").find("option:selected").attr("value");
+            layer.open({
+                type: 2,
+                title: '计划信息修改',
+                closeBtn: 1,
+                area: ['700px', '550px'],
+                shadeClose: true, //点击遮罩关闭
+                content: ['/setup_jobs/solar_edit/' + n,],
+                end: function () {
+                    var handle_status = $("#handle_status").val();
+                    if (handle_status == '1') {
+                        layer.msg('保存成功！', {
+                            icon: 1,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            history.go(0);
+                        });
+                    } else if (handle_status == '2') {
+                        layer.msg('修改失败！', {
+                            icon: 2,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            history.go(0);
+                        });
+                    }
+                }
+            });
+        }
+    </script>
+{% endblock %}

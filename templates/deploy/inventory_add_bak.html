@@ -1,0 +1,287 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    <title> ALANCMDB-动态资产 </title>
+{% endblock %}
+
+
+{% block css-js %}
+    <!--Ion Icons [ OPTIONAL ]-->
+    <link href="/static/css/ionicons.min.css" rel="stylesheet">
+    <script src="/static/js/layer/layer.js"></script>
+    <!--Nifty Premium Icon [ DEMONSTRATION ]-->
+    <link href="/static/css/nifty-demo-icons.min.css" rel="stylesheet">
+    <!--Bootstrap Validator [ OPTIONAL ]-->
+    <link href="/static/css/bootstrapvalidator.min.css" rel="stylesheet">
+
+    <!--Font Awesome [ OPTIONAL ]-->
+    <link href="/static/css/magic-check.min.css" rel="stylesheet">
+
+        <!--Form validation [ SAMPLE ]-->
+    <script src="/static/js/form-validation.js"></script>
+
+    <!--Masked Input [ OPTIONAL ]-->
+    <script src="/static/js/jquery.maskedinput.min.js"></script>
+        <!--Bootstrap Validator [ OPTIONAL ]-->
+    <script src="/static/js/bootstrapvalidator.min.js"></script>
+
+
+{% endblock %}
+
+
+{% block page-title %}
+    <h1 class="page-header text-overflow">Create Inventory</h1>
+{% endblock %}
+
+{% block content %}
+    {% if message %}
+        <div class="alert alert-warning">{{ message }}</div>
+    {% endif %}
+{#    <form class="form-horizontal" role="form" action={% url "inventory_add" %} method="POST">#}
+{#        {% csrf_token %}#}
+        <div class="box-body">
+
+					        <!-- FORM VALIDATION ON TABS -->
+					        <!--===================================================-->
+					        <div class="tab-base">
+
+					            <!-- Nav tabs -->
+					            <ul class="nav nav-tabs">
+					                <li class="active"><a href="#demo-bsc-tab-1" data-toggle="tab">动态资产表</a></li>
+					                <li><a href="#demo-bsc-tab-2" data-toggle="tab">分组管理</a></li>
+					            </ul>
+
+					            <!-- Tabs Content -->
+					            <form id="demo-bv-bsc-tabs" class="form-horizontal" action="#" method="post">
+					                <div class="tab-content">
+                                    <div class="tab-pane pad-btm fade in active" id="demo-bsc-tab-1">
+					                        <p class="text-main text-bold">第一步：创建动态资产</p>
+					                        <hr>
+                                    {% for form in inventory_form  %}
+                                        <div class="form-group has-feedback">
+                                        <label class="col-ms-10 control-label" style="margin-left: 10px;">
+                                            {{ form.label }}
+                                        </label>
+                                    <div class="col-ms-10" style="margin-left: 10px;">
+
+                                            {{ form }}
+                                    </div>
+                                    </div>
+                                     {% endfor %}
+					                    </div>
+					                    <div class="tab-pane fade" id="demo-bsc-tab-2">
+					                        <p class="text-main text-bold">第二步：创建分组管理</p>
+					                        <hr>
+					                         {% for form in group_form  %}
+                                        <div class="form-group has-feedback">
+                                        <label class="col-ms-10 control-label" style="margin-left: 10px;">
+                                            {{ form.label }}
+                                        </label>
+                                    <div class="col-ms-10" style="margin-left: 10px;">
+
+                                            {{ form }}
+					                            </div>
+					                        </div>
+                                            {% endfor %}
+					                    </div>
+					                    <div class="tab-footer clearfix">
+					                        <div class="col-lg-7 pull-left">
+					                            <button type="submit" class="btn btn-primary">提交</button>
+					                        </div>
+					                    </div>
+					                </div>
+					            </form>
+					        </div>
+					        <!--===================================================-->
+					        <!-- END FORM VALIDATION ON TABS -->
+
+        </div>
+{#    </form>#}
+
+    <script>
+        function cron_add() {
+            layer.open({
+                type: 2,
+                title: '新增crontab计划',
+                closeBtn: 1,
+                area: ['700px', '550px'],
+                shadeClose: true, //点击遮罩关闭
+                content: ['/setup_jobs/cron_add/'],
+                end: function () {
+                    var handle_status = $("#handle_status").val();
+                    if (handle_status == '1') {
+                        layer.msg('新增成功！', {
+                            icon: 1,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            history.go(0); //刷新页面
+                        });
+                    } else if (handle_status == '2') {
+                        layer.msg('新增失败！', {
+                            icon: 2,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            history.go(0);
+                        });
+                    }
+                }
+            });
+        }
+    </script>
+    <script>
+        function cron_edit() {
+            var n = $("#id_crontab").find("option:selected").attr("value");
+            layer.open({
+                type: 2,
+                title: '计划信息修改',
+                closeBtn: 1,
+                area: ['700px', '550px'],
+                shadeClose: true, //点击遮罩关闭
+                content: ['/setup_jobs/cron_edit/' + n,],
+                end: function () {
+                    var handle_status = $("#handle_status").val();
+                    if (handle_status == '1') {
+                        layer.msg('保存成功！', {
+                            icon: 1,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            history.go(0);
+                        });
+                    } else if (handle_status == '2') {
+                        layer.msg('修改失败！', {
+                            icon: 2,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            history.go(0);
+                        });
+                    }
+                }
+            });
+        }
+    </script>
+
+    <script>
+        function interval_add() {
+            layer.open({
+                type: 2,
+                title: '新增interval计划',
+                closeBtn: 1,
+                area: ['700px', '550px'],
+                shadeClose: true, //点击遮罩关闭
+                content: ['/setup_jobs/interval_add/'],
+                end: function () {
+                    var handle_status = $("#handle_status").val();
+                    if (handle_status == '1') {
+                        layer.msg('新增成功！', {
+                            icon: 1,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            history.go(0); //刷新页面
+                        });
+                    } else if (handle_status == '2') {
+                        layer.msg('新增失败！', {
+                            icon: 2,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            history.go(0);
+                        });
+                    }
+                }
+            });
+        }
+    </script>
+    <script>
+        function interval_edit() {
+            var n = $("#id_interval").find("option:selected").attr("value");
+            layer.open({
+                type: 2,
+                title: '计划信息修改',
+                closeBtn: 1,
+                area: ['700px', '550px'],
+                shadeClose: true, //点击遮罩关闭
+                content: ['/setup_jobs/interval_edit/' + n,],
+                end: function () {
+                    var handle_status = $("#handle_status").val();
+                    if (handle_status == '1') {
+                        layer.msg('保存成功！', {
+                            icon: 1,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            history.go(0);
+                        });
+                    } else if (handle_status == '2') {
+                        layer.msg('修改失败！', {
+                            icon: 2,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            history.go(0);
+                        });
+                    }
+                }
+            });
+        }
+    </script>
+
+    <script>
+        function solar_add() {
+            layer.open({
+                type: 2,
+                title: '新增solar计划',
+                closeBtn: 1,
+                area: ['700px', '550px'],
+                shadeClose: true, //点击遮罩关闭
+                content: ['/setup_jobs/solar_add/'],
+                end: function () {
+                    var handle_status = $("#handle_status").val();
+                    if (handle_status == '1') {
+                        layer.msg('新增成功！', {
+                            icon: 1,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            history.go(0); //刷新页面
+                        });
+                    } else if (handle_status == '2') {
+                        layer.msg('新增失败！', {
+                            icon: 2,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            history.go(0);
+                        });
+                    }
+                }
+            });
+        }
+    </script>
+    <script>
+        function solar_edit() {
+            var n = $("#id_solar").find("option:selected").attr("value");
+            layer.open({
+                type: 2,
+                title: '计划信息修改',
+                closeBtn: 1,
+                area: ['700px', '550px'],
+                shadeClose: true, //点击遮罩关闭
+                content: ['/setup_jobs/solar_edit/' + n,],
+                end: function () {
+                    var handle_status = $("#handle_status").val();
+                    if (handle_status == '1') {
+                        layer.msg('保存成功！', {
+                            icon: 1,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            history.go(0);
+                        });
+                    } else if (handle_status == '2') {
+                        layer.msg('修改失败！', {
+                            icon: 2,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            history.go(0);
+                        });
+                    }
+                }
+            });
+        }
+    </script>
+{% endblock %}

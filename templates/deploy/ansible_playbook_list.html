@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+<title> Ansible 剧本列表 </title>
+{% endblock %}
+
+
+{% block css-js %}
+
+  <!--DataTables [ OPTIONAL ]-->
+    <link href="/static/css/datatables.bootstrap.css" rel="stylesheet">
+	<link href="/static/css/datatables.responsive.css" rel="stylesheet">
+        <!--FooTable [ OPTIONAL ]-->
+    <link href="/static/css/footable.core.css" rel="stylesheet">
+
+   <script src="/static/js/jquery.datatables.js"></script>
+    <script src="/static/js/datatables.bootstrap.js"></script>
+	<script src="/static/js/datatables.responsive.min.js"></script>
+    <!--DataTables Sample [ SAMPLE ]-->
+    <script src="/static/js/tables-datatables.js"></script>
+    <!--FooTable [ OPTIONAL ]-->
+    <script src="/static/js/footable.all.min.js"></script>
+
+
+    <!--FooTable Example [ SAMPLE ]-->
+    <script src="/static/js/tables-footable.js"></script>
+
+
+{% endblock %}
+
+
+{% block page-title %}
+<h1 class="page-header text-overflow">Ansible Scripts</h1>
+{% endblock %}
+
+{% block content %}
+    <!--Breadcrumb-->
+                <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                <ol class="breadcrumb">
+					<li><a href="/">首页</a></li>
+					<li><a href="/deploy/">应用部署</a></li>
+					<li class="active">剧本列表</li>
+                </ol>
+                <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                <!--End breadcrumb-->
+
+<div class="panel">
+					    <div class="panel-heading">
+					        <h3 class="panel-title">ansible 剧本</h3>
+                        </div>
+
+                            <li class="pull-left btn">
+                            <a href="{% url 'playbook_add' %}" class="btn btn-success btn-bock" >
+                                <b>新增Playbook</b>
+                            </a>
+                            </li>
+
+<br>
+<br>
+                            <!-- Foo Table - Pagination -->
+                    <!--===================================================-->
+                    <div class="panel-body">
+					                <label class="form-inline">Show
+					                    <select id="demo-show-entries" class="form-control input-sm">
+					                        <option value="5">5</option>
+					                        <option value="10">10</option>
+					                        <option value="15">15</option>
+					                        <option value="20">20</option>
+					                    </select>
+					                    entries
+					                </label>
+					                <table id="demo-foo-pagination" class="table toggle-arrow-tiny" data-page-size="5">
+					                    <thead>
+					                        <tr>
+					                            <th data-toggle="true">序号</th>
+					                            <th>剧本名称</th>
+					                            <th>UUID号</th>
+					                            <th>剧本描述</th>
+					                            <th>目标服务器</th>
+                                                <th>操作</th>
+                                                <th data-hide="all">file</th>
+					                        </tr>
+					                    </thead>
+					                    <tbody>
+                                        {% for data in data_list %}
+                                        <tr>
+                                          <td>{{ forloop.counter }}</td>
+
+					                            <td>{{ data.playbook_name }}</td>
+					                            <td>{{ data.playbook_uuid }}</td>
+					                            <td>{{ data.playbook_desc }}</td>
+					                            <td>{{ data.playbook_auth_group }}</td>
+					                             <td class="text-center" data-editable='false'>
+                                        <a href="{% url 'playbook_run' data.id %}" class="btn btn-sm btn-info">运行</a>
+                                        <a href="{% url 'playbook_del' data.id %}" class="btn btn-sm btn-danger user_del"  onclick="return confirm('确认删除？')">删除</a>
+                                    </td>
+                                            <td>
+
+                                                <pre>{{ data.detail }}</pre>
+
+                                            </td>
+					                        </tr>
+                                        {% empty %}
+                                         <tr>没有数据！</tr>
+                                        {% endfor %}
+
+					                    </tbody>
+					                    <tfoot>
+					                        <tr>
+					                            <td colspan="5">
+					                                <div class="text-right">
+					                                    <ul class="pagination"></ul>
+					                                </div>
+					                            </td>
+					                        </tr>
+					                    </tfoot>
+					                </table>
+					            </div>
+                    <!--===================================================-->
+                    <!-- End Foo Table - Pagination -->
+					</div>
+
+
+{% endblock %}

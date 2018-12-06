@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    <title> ALANCMD-增加资产 </title>
+{% endblock %}
+
+
+{% block css-js %}
+
+
+{% endblock %}
+
+
+{% block page-title %}
+    <h1 class="page-header text-overflow">Asset Edit</h1>
+{% endblock %}
+
+{% block content %}
+ {% if message %}
+                  <div class="alert alert-warning">{{ message }}</div>
+              {% endif %}
+    <div id="page-wrapper">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">资产修改</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-2">
+                        </div>
+
+                        <form class="form-horizontal" role="form" action={% url "cmdb:asset_edit"  asset_id %} method="POST">
+                            {% csrf_token %}
+                            <div class="col-lg-8">
+                                <fieldset>
+                                    {{ form }}
+                                </fieldset>
+
+                                <div class="form-group">
+                                    <div class="box-footer" style="margin-left: 10px;width: 530px;">
+                                        <button type="submit" class="btn btn-primary pull-left" style="width: 120px">
+                                            提交
+                                        </button>&nbsp;&nbsp;
+                                        <a class="btn btn-danger" href="{% url "cmdb:assets_info" %}"
+                                           style="width: 120px">返回</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+                    <!-- /.row (nested) -->
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+{% endblock %}
