@@ -15,8 +15,13 @@ from .ansible_api_v2 import ANSRunner
 from .forms import InventoryForm, GroupForm, MoudelForm, ScriptsForm, PlaybookForm
 from .log_ansible import AnsibleRecord
 from .models import (Ansible_Inventory, Ansible_Group, Ansible_Server, Assets,
-                     Ansible_Script, Ansible_Playbook, Log_Ansible_Playbook, Log_Ansible_Model, )
+                     Ansible_Script, Ansible_Playbook, Log_Ansible_Playbook,
+                     Log_Ansible_Model,)
+from delivery.models import Project_Config,Project_Number,BusinessUnit
+from cmdb.models import Server_asset,Service_Assets
+from django.contrib.auth.models import Group
 from .redis_ops import Redis_pool
+from .assets_query import AssetsSource
 
 
 # Create your views here.
@@ -171,10 +176,21 @@ def moudel_run(request):
             model = form.cleaned_data['moudel']
             args = form.cleaned_data['moudel_args']
             debug = form.cleaned_data['_debug']
-            inventory = form.cleaned_data['inventory']
+            # inventory = form.cleaned_data['inventory']
             # print model,args,debug,inventory
-            resource, sList = get_json_inentory(inventory.id, pw="get")
+            # resource, sList = get_json_inentory(inventory.id, pw="get")
+            resource = []
+            sList = []
 
+            if request.POST.get('server_model') == 'custom':
+                serverList = request.POST.getlist('ansible_server')
+                sList, resource = AssetsSource().custom(serverList)
+            elif request.POST.get('server_model') == 'group':
+                sList, resource = AssetsSource().group(group=request.POST.get('ansible_group'))
+            elif request.POST.get('server_model') == 'service':
+                sList, resource = AssetsSource().service(business=request.POST.get('ansible_service'))
+            elif request.POST.get('server_model') == 'inventory':
+                sList, resource, groups = AssetsSource().inventory(inventory=request.POST.get('ansible_inventory'))
             if len(sList) > 0:
                 # 使用日志全局配置设置
                 logId = AnsibleRecord.Model.insert(user=str(request.user), ans_model=model,
@@ -204,6 +220,10 @@ def moudel_run(request):
     else:
         form = MoudelForm()
         rediskey = uuid.uuid4()
+        projectList = BusinessUnit.objects.all()
+        serverList = AssetsSource().serverList()
+        inventoryList = Ansible_Inventory.objects.all()
+        groupList = Group.objects.all()
         return render(request, "deploy/moudel.html", locals())
 
 
@@ -221,9 +241,15 @@ def scripts_list(request):
 @login_required
 @permission_verify()
 def scripts_add(request):
+
     if request.method == "GET":
         form = ScriptsForm()
         uuidkey = uuid.uuid4()
+        projectList = BusinessUnit.objects.all()
+        serverList = AssetsSource().serverList()
+        inventoryList = Ansible_Inventory.objects.all()
+        groupList = Group.objects.all()
+        # serviceList = Service_Assets.objects.all()
         return render(request, "deploy/scripts_run_online.html", locals())
     elif request.method == "POST":
         scripts_uuid = request.POST.get('uuidkey')
@@ -233,9 +259,25 @@ def scripts_add(request):
             name = form.cleaned_data['name']
             scripts_args = form.cleaned_data['scripts_args']
             debug = form.cleaned_data['_debug']
-            inventory = form.cleaned_data['inventory']
-            # print model,args,debug,inventory
-            resource, sList = get_json_inentory(inventory.id, pw="get")
+            resource = []
+            sList = []
+
+            if request.POST.get('server_model') == 'custom':
+                serverList = request.POST.getlist('ansible_server')
+                sList, resource = AssetsSource().custom(serverList)
+            elif request.POST.get('server_model') == 'group':
+                sList, resource = AssetsSource().group(group=request.POST.get('ansible_group'))
+            elif request.POST.get('server_model') == 'service':
+                sList, resource = AssetsSource().service(business=request.POST.get('ansible_service'))
+            elif request.POST.get('server_model') == 'inventory':
+                sList, resource, groups = AssetsSource().inventory(inventory=request.POST.get('ansible_inventory'))
+            # if len(request.POST.get('custom_model')) > 0:
+            #     model_name = request.POST.get('custom_model')
+            # else:
+            #     model_name = request.POST.get('ansible_model', None)
+            # inventory = form.cleaned_data['inventory']
+            # # print model,args,debug,inventory
+            # resource, sList = get_json_inentory(inventory.id, pw="get")
 
             def saveScript(content, filePath):
                 if os.path.isdir(os.path.dirname(filePath)) is not True:
@@ -354,7 +396,10 @@ def playbook_run(request, s_id):
         with open(os.getcwd() + str(playbook.playbook_file), 'r') as f:
             contents = '\n'.join(i for i in f.readlines())
         form = ScriptsForm(data)
-
+        projectList = BusinessUnit.objects.all()
+        serverList = AssetsSource().serverList()
+        inventoryList = Ansible_Inventory.objects.all()
+        groupList = Group.objects.all()
         return render(request, "deploy/playbook_run_online.html", locals())
 
 
@@ -364,6 +409,10 @@ def playbook_add(request):
     if request.method == "GET":
         form = PlaybookForm()
         uuidkey = uuid.uuid4()
+        projectList = BusinessUnit.objects.all()
+        serverList = AssetsSource().serverList()
+        inventoryList = Ansible_Inventory.objects.all()
+        groupList = Group.objects.all()
         return render(request, "deploy/playbook_run_online.html", locals())
     elif request.method == "POST":
         playbook_uuid = request.POST.get('uuidkey')
@@ -374,10 +423,21 @@ def playbook_add(request):
             playbook_args = form.cleaned_data['playbook_args']
             playbook_desc = form.cleaned_data['playbook_desc']
             debug = form.cleaned_data['_debug']
-            inventory = form.cleaned_data['inventory']
+            # inventory = form.cleaned_data['inventory']
             # print name,playbook_args,playbook_desc,debug,inventory
-            resource, sList = get_json_inentory(inventory.id, pw="get")
+            # resource, sList = get_json_inentory(inventory.id, pw="get")
+            resource = []
+            sList = []
 
+            if request.POST.get('server_model') == 'custom':
+                serverList = request.POST.getlist('ansible_server')
+                sList, resource = AssetsSource().custom(serverList)
+            elif request.POST.get('server_model') == 'group':
+                sList, resource = AssetsSource().group(group=request.POST.get('ansible_group'))
+            elif request.POST.get('server_model') == 'service':
+                sList, resource = AssetsSource().service(business=request.POST.get('ansible_service'))
+            elif request.POST.get('server_model') == 'inventory':
+                sList, resource, groups = AssetsSource().inventory(inventory=request.POST.get('ansible_inventory'))
             def saveScript(content, filePath):
                 if os.path.isdir(os.path.dirname(filePath)) is not True:
                     os.makedirs(os.path.dirname(filePath))  # 判断文件存放的目录是否存在，不存在就创建

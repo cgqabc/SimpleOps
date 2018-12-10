@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^assets/$', views.assets_list),
     url(r'^project/$', views.project_list),
     url(r'^project/(?P<id>[0-9]+)/$', views.project_detail),
+    url(r'^inventory/(?P<id>[0-9]+)/$', views.inventory_detail),
     url(r'^service/$', views.service_list),
     url(r'^service/(?P<id>[0-9]+)/$', views.service_detail),
     url(r'^assets/(?P<id>[0-9]+)/$', views.assets_detail),

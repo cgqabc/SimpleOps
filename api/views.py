@@ -7,7 +7,9 @@ from rest_framework.decorators import api_view
 from accounts.permission import permission_verify
 from .serializers import AssetsSerializer,ServerSerializer,ServiceSerializer,ProjectSerializer
 from cmdb.models import Assets,Server_asset,Service_Assets,BusinessUnit
+from deploy.models import Ansible_Inventory
 from rest_framework import status
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -137,3 +139,33 @@ def service_detail(request,id):
             serializer.save()
             return Response(serializer.data,status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'POST', 'DELETE'])
+@permission_verify()
+def inventory_detail(request,id):
+    try:
+        inventory = Ansible_Inventory.objects.get(id=id)
+    except Ansible_Inventory.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method == "GET":
+        source = {}
+        for ds in inventory.inventory_group.all():
+            source[ds.group] = {}
+            hosts = []
+            for ser in ds.inventory_server.all():
+                assets = Assets.objects.get(id=ser.server)
+                if hasattr(assets, 'server_asset'):
+                    hosts.append(assets.server_asset.ip)
+                elif hasattr(assets, 'network_asset'):
+                    hosts.append(assets.network_asset.ip)
+            source[ds.group]['hosts'] = hosts
+            if ds.ext_vars:
+                try:
+                    source[ds.group]['vars'] = eval(ds.ext_vars)
+                except Exception, ex:
+                    source[ds.group]['vars'] = {}
+                    # logger.warn(msg="获取资产组变量失败: {ex}".format(ex=ex))
+        return JsonResponse({"code": 200, "msg": "success", "data": source})
+    elif request.method == 'DELETE':
+        inventory.delete()
+        return JsonResponse({"code": 200, "msg": "删除成功", "data": None})

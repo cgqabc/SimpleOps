@@ -3,6 +3,7 @@
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
 from cmdb.models import Assets,Server_asset,Service_Assets,BusinessUnit
+from deploy.models import Ansible_Inventory
 
 class AssetsSerializer(ModelSerializer):
 
@@ -36,3 +37,9 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = BusinessUnit
         fields = ('id', 'name', 'service_assets')
+
+class InventorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Ansible_Inventory
+        fields = ('id', 'name', 'desc')

@@ -46,8 +46,8 @@ class GroupForm(forms.Form):
 class MoudelForm(forms.Form):
     _moudels = ("shell","ping","copy","yum","user","service","file","cron","sync","wget","custom")
     _moudels = zip(_moudels,_moudels)
-    inventory = forms.ModelChoiceField(queryset=Ansible_Inventory.objects.all(),
-                                       widget=forms.Select(attrs={'class': 'form-control'}))
+    # inventory = forms.ModelChoiceField(queryset=Ansible_Inventory.objects.all(),
+    #                                    widget=forms.Select(attrs={'class': 'form-control'}))
     moudel = forms.ChoiceField(required=True, choices=_moudels, label='选择模块',
                                initial='ping',
                                widget=forms.Select(attrs={'class': 'form-control'}))
@@ -66,8 +66,8 @@ class ScriptsForm(forms.Form):
                            widget=forms.TextInput(attrs={'class': 'form-control',
                                                          'placeholder': '如：用户新增',
                                                          }), )
-    inventory = forms.ModelChoiceField(queryset=Ansible_Inventory.objects.all(),
-                                       widget=forms.Select(attrs={'class': 'form-control'}))
+    # inventory = forms.ModelChoiceField(queryset=Ansible_Inventory.objects.all(),
+    #                                    widget=forms.Select(attrs={'class': 'form-control'}))
 
     scripts_args = forms.CharField(required=False, label='参数',
                            widget=forms.TextInput(attrs={'class': 'form-control',
@@ -84,8 +84,8 @@ class PlaybookForm(forms.Form):
                            widget=forms.TextInput(attrs={'class': 'form-control',
                                                          'placeholder': '如：用户新增',
                                                          }), )
-    inventory = forms.ModelChoiceField(queryset=Ansible_Inventory.objects.all(),
-                                       widget=forms.Select(attrs={'class': 'form-control'}))
+    # inventory = forms.ModelChoiceField(queryset=Ansible_Inventory.objects.all(),
+    #                                    widget=forms.Select(attrs={'class': 'form-control'}))
 
     playbook_args = forms.CharField(required=False, label='剧本参数',
                            widget=forms.TextInput(attrs={'class': 'form-control',
